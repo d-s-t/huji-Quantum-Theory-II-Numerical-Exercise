@@ -30,7 +30,7 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
                             go.Scatter(x=r, y=evecs_nm[:,0], mode='lines', name='Numerov Method')])\
                         .update_xaxes(title_text='r (fm)')\
                         .update_yaxes(title_text='u(r)')
-        plotly_export(wave_function_fig, f'harmonic_oscillator_wavefunction_N{N}')
+        plotly_export(wave_function_fig, f'harmonic_oscillator\\wavefunction\\N{N}')
         
         ground_state_energies_fd[i] = evals_fd[0]
         ground_state_energies_nm[i] = evals_nm[0]
@@ -56,7 +56,7 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
                 .update_xaxes(title_text='N', type='log')\
                 .update_yaxes(title_text='Residual Error (MeV)', type='log')
     
-    plotly_export(residual_fig, 'harmonic_oscillator_residual_error')
+    plotly_export(residual_fig, 'harmonic_oscillator\\residual_error')
 
     # curve fit the error to a function of the form \eta = C * N^{-q} and report the values of C and q.
     def error_func(N, C, q):
