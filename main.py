@@ -28,8 +28,9 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
         # plot the wave function of the ground state
         wave_function_fig = go.Figure([go.Scatter(x=r, y=evecs_fd[:,0], mode='lines', name='Finite Difference'),
                             go.Scatter(x=r, y=evecs_nm[:,0], mode='lines', name='Numerov Method')])\
-                        .update_xaxes(title_text='r (fm)')\
-                        .update_yaxes(title_text='u(r)')
+                        .update_xaxes(title_text='r')\
+                        .update_yaxes(title_text='u(r)')\
+                        .update_layout(legend=dict(x=0.8, y=0.95))
         plotly_export(wave_function_fig, f'harmonic_oscillator\\wavefunction\\N{N}')
         
         ground_state_energies_fd[i] = evals_fd[0]
@@ -54,7 +55,8 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
     residual_fig = go.Figure([go.Scatter(x=N_values, y=residual_error_fd, mode='markers+lines', name='Finite Difference'),
                    go.Scatter(x=N_values, y=residual_error_nm, mode='markers+lines', name='Numerov Method')])\
                 .update_xaxes(title_text='N', type='log')\
-                .update_yaxes(title_text='Residual Error (MeV)', type='log')
+                .update_yaxes(title_text='Residual Error (MeV)', type='log')\
+                .update_layout(legend=dict(x=0.8, y=0.95))
     
     plotly_export(residual_fig, 'harmonic_oscillator\\residual_error')
 
