@@ -39,7 +39,7 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
     with open(table_filename, 'w') as f:
         f.write(r'\begin{tabular}{|c|c|c|}' + '\n')
         f.write(r'\hline' + '\n')
-        f.write(r'N & Finite Difference Energy (MeV) & Numerov Method Energy (MeV) \\' + '\n')
+        f.write(r'K & הפרשים סופיים & שיטת נומרוב \\' + '\n')
         f.write(r'\hline' + '\n')
         for N, e_fd, e_nm in zip(N_values, ground_state_energies_fd, ground_state_energies_nm):
             f.write(f'{N} & {e_fd:.6f} & {e_nm:.6f} \\\\' + '\n')
