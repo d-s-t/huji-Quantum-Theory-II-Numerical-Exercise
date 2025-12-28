@@ -4,6 +4,7 @@ import astropy.constants as const
 import functools
 import operator
 import numpy as np
+from os import path, makedirs
 
 units.MeVc2 = units.def_unit('MeV / c2', units.MeV/const.c**2, format={'latex': r'MeV/c^2'})
 
@@ -45,6 +46,9 @@ def flatten(a):
 
 
 def plotly_export(fig, filename, html=False, show=False, **kwargs):
+    dir = path.dirname(f'./plots/{filename}')
+    if not path.exists(dir):
+        makedirs(dir)
     fig.update_layout(margin=dict(t=50, b=0, l=0, r=0), width=800, height=450)
     fig.write_image(f"./plots/{filename}.eps", width=800, height=450,format='eps', engine='kaleido')
     plotly_show_config['toImageButtonOptions']['filename'] = filename
