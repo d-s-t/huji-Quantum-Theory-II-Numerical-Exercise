@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[a4paper, total={7in, 9.8in}]{geometry}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\usepackage{physics}
+
+\usepackage{polyglossia}
+
+\setmainlanguage{hebrew}
+\setotherlanguage{english}
+\newfontfamily{\englishfont}{Latin Modern Roman}
+\newfontfamily{\hebrewfont}[Script=Hebrew]{Arial}
+\newfontfamily{\hebrewfontsf}[Script=Hebrew]{Arial}
+\newfontfamily{\hebrewfonttt}[Script=Hebrew]{Miriam Mono CLM Bold}
+
+\setlength{\parindent}{0pt}
+
+\title{קוונטים 2\ \textendash\ תרגיל נומרי}
+\author{\begin{hebrew}דוד שם־טוב\end{hebrew}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{מתנד הרמוני}
+\input{harmonic_oscillator_results}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{plots/harmonic_oscillator/wavefunction/N120.eps}
+    \caption{פונקציית הגל עבור $K=120$}
+    \label{fig:wave240}
+\end{figure}
+
+\end{document}
