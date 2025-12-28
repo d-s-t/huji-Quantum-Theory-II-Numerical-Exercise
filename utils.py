@@ -44,13 +44,14 @@ def flatten(a):
     return functools.reduce(operator.iconcat, a, [])
 
 
-def plotly_export(fig, filename, html=False, **kwargs):
+def plotly_export(fig, filename, html=False, show=False, **kwargs):
     fig.update_layout(margin=dict(t=50, b=0, l=0, r=0), width=800, height=450)
     fig.write_image(f"./plots/{filename}.eps", width=800, height=450,format='eps', engine='kaleido')
     plotly_show_config['toImageButtonOptions']['filename'] = filename
     if html:
         fig.write_html(f"./plots/{filename}.html", config=plotly_show_config)
-    fig.show(config=plotly_show_config)
+    if show:
+        fig.show(config=plotly_show_config)
     plotly_show_config['toImageButtonOptions']['filename'] = 'unset'
 
 def derivative_o4(u, dx):
