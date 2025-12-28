@@ -1,8 +1,9 @@
 from eigen_state_solvers import finite_difference_method_radial, numerov_method_radial
-from utils import harmonic_oscillator_potential
+from utils import harmonic_oscillator_potential, plotly_export
 from sys import float_info
 import numpy as np
 from plotly import graph_objects as go
+from scipy.optimize import curve_fit
 
 def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.tex'):
     """
@@ -25,12 +26,11 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
         evals_nm, evecs_nm = numerov_method_radial(l, V, r)
 
         # plot the wave function of the ground state
-        go.Figure([go.Scatter(x=r, y=evecs_fd[:,0], mode='lines', name='Finite Difference'),
-                   go.Scatter(x=r, y=evecs_nm[:,0], mode='lines', name='Numerov Method')])\
-            .update_layout(title=f'Wave function of the ground state for N={N}')\
-            .update_xaxes(title_text='r (fm)')\
-            .update_yaxes(title_text='u(r)')\
-            .show()
+        wave_function_fig = go.Figure([go.Scatter(x=r, y=evecs_fd[:,0], mode='lines', name='Finite Difference'),
+                            go.Scatter(x=r, y=evecs_nm[:,0], mode='lines', name='Numerov Method')])\
+                        .update_xaxes(title_text='r (fm)')\
+                        .update_yaxes(title_text='u(r)')
+        plotly_export(wave_function_fig, f'harmonic_oscillator_wavefunction_N{N}')
         
         ground_state_energies_fd[i] = evals_fd[0]
         ground_state_energies_nm[i] = evals_nm[0]
@@ -45,3 +45,26 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
             f.write(f'{N} & {e_fd:.6f} & {e_nm:.6f} \\\\' + '\n')
             f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
+    
+    # plot the residual error \eta = |\epsilon - 3/2| as a function of N. use log-log scale.
+    exact_energy = 1.5  # MeV
+    residual_error_fd = np.abs(ground_state_energies_fd - exact_energy)
+    residual_error_nm = np.abs(ground_state_energies_nm - exact_energy)
+
+    residual_fig = go.Figure([go.Scatter(x=N_values, y=residual_error_fd, mode='markers+lines', name='Finite Difference'),
+                   go.Scatter(x=N_values, y=residual_error_nm, mode='markers+lines', name='Numerov Method')])\
+                .update_xaxes(title_text='N', type='log')\
+                .update_yaxes(title_text='Residual Error (MeV)', type='log')
+    
+    plotly_export(residual_fig, 'harmonic_oscillator_residual_error')
+
+    # curve fit the error to a function of the form \eta = C * N^{-q} and report the values of C and q.
+    def error_func(N, C, q):
+        return C * N**(-q)
+    (_, q_fd), _ = curve_fit(error_func, N_values, residual_error_fd)
+    (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm)
+    print(f'Finite Difference Method: q = {q_fd:.4f}')
+    print(f'Numerov Method: q = {q_nm:.4f}')
+
+if __name__ == '__main__':
+    harmonic_ocillator_task()
