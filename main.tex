@@ -37,19 +37,20 @@
     \label{tab:harmonic_oscillator_results}
 \end{table}
 \begin{figure}[h!]
-    \centering
-\begin{minipage}[t]{0.48\linewidth}
-\foreach \K in {40,80,120,240,360,480,600}{%
-\includegraphics[width=\linewidth]{plots/harmonic_oscillator/wavefunction/N\K.eps}
-    \caption{פונקציית הגל עבור $K=\K$}
-    \label{fig:harmonic_oscillator_wave\K}
-}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.48\linewidth}
 \includegraphics[width=\linewidth]{plots/harmonic_oscillator/residual_error.eps}
     \caption{השגיאה השיורית ברמת היסוד (עבור $\epsilon=\frac{3}{2}$)}
     \label{fig:harmonic_oscillator_residual_error}
-\end{minipage}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \foreach \K in {40,80,120,240,360,480,600}{%
+    \begin{minipage}[t]{0.48\linewidth}
+    \includegraphics[width=\linewidth]{plots/harmonic_oscillator/wavefunction/N\K.eps}
+        \caption{פונקציית הגל עבור $K=\K$}
+        \label{fig:harmonic_oscillator_wave\K}
+    \end{minipage}
+    }
 \end{figure}
 \end{document}
