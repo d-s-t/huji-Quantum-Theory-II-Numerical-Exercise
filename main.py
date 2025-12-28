@@ -10,9 +10,9 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
     use both finite difference and numerov methods to solve the harmonic oscillator potential
     use l = 0, R = 10 and N= [40,80,120,240,360,480,600]
     1. plot the wave function of the ground state
-    2. write latex table of the ground state energy \epsilon for each N and each method.
-       plot the residual error \eta = |\epsilon - 3/2| as a function of N. use log-log scale.
-    3. curve fit the error to a function of the form \eta = C * N^{-q} and report the values of C and q.
+    2. write latex table of the ground state energy epsilon for each N and each method.
+       plot the residual error eta = |epsilon - 3/2| as a function of N. use log-log scale.
+    3. curve fit the error to a function of the form eta = C * N^{-q} and report the values of C and q.
     """
     l = 0
     R = 10
