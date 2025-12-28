@@ -50,7 +50,7 @@ def plotly_export(fig, filename, html=False, show=False, **kwargs):
     if not path.exists(dir):
         makedirs(dir)
     fig.update_layout(margin=dict(t=50, b=0, l=0, r=0), width=800, height=450)
-    fig.write_image(f"./plots/{filename}.eps", width=800, height=450,format='eps', engine='kaleido', scale=20)
+    fig.write_image(f"./plots/{filename}.eps", width=400, height=300,format='eps', engine='kaleido')
     plotly_show_config['toImageButtonOptions']['filename'] = filename
     if html:
         fig.write_html(f"./plots/{filename}.html", config=plotly_show_config)
