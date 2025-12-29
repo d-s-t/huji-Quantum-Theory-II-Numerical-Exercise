@@ -21,7 +21,7 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
     ground_state_energies_fd = np.empty_like(N_values, dtype=float)
     ground_state_energies_nm = np.empty_like(N_values, dtype=float)
     for i, N in enumerate(N_values):
-        r = np.linspace(float_info.epsilon, R, N)
+        r = np.linspace(0, R, N + 1)[1:]
         evals_fd, evecs_fd = finite_difference_method_radial(l, V, r)
         evals_nm, evecs_nm = numerov_method_radial(l, V, r)
 

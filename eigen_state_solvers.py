@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Callable
-from scipy.linalg import eigh, eigh_tridiagonal
+from scipy.linalg import eig, eigh_tridiagonal
 
 def _W(V: Callable[[np.ndarray], np.ndarray], l: int, r: np.ndarray) -> np.ndarray:
     """
@@ -70,7 +70,12 @@ def numerov_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray], r: np.n
     N_off_diag = 1/12 * np.ones(len(r) - 1)
     N = np.diag(N_main_diag) + np.diag(N_off_diag, 1) + np.diag(N_off_diag, -1)
 
-    evals, evecs = eigh(H, N)
+    evals, evecs = eig(H, N)
+    # sort eigenvalues (eig does not guarantee order) and take real part
+    idx = evals.real.argsort()
+    evals = evals[idx]
+    evecs = evecs[:, idx]
+    
     # return the real parts of the eigenvalues and eigenvectors
     normalized_evecs = evecs / np.sqrt(np.trapezoid(evecs * np.conjugate(evecs), r, axis=0))
     return evals.real, normalized_evecs
