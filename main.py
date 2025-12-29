@@ -36,6 +36,12 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
         ground_state_energies_fd[i] = evals_fd[0]
         ground_state_energies_nm[i] = evals_nm[0]
     
+    # make one figure of only the ground state wave function for N=600 with numerov method
+    wave_function_fig = go.Figure([go.Scatter(x=r, y=evecs_nm[:,0], mode='lines', name='Numerov')])\
+                        .update_xaxes(title_text='r')\
+                        .update_yaxes(title_text='u(r)')
+    plotly_export(wave_function_fig, f'harmonic_oscillator\\ground_state_wavefunction_numerov_N600')
+
     # write latex table of the ground state energy \epsilon for each N and each method.
     with open(table_filename, 'w') as f:
         f.write(r'\begin{tabular}{|c|c|c|}' + '\n')
@@ -56,7 +62,7 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
                    go.Scatter(x=N_values, y=residual_error_nm, mode='markers+lines', name='Numerov')])\
                 .update_xaxes(title_text='N', type='log')\
                 .update_yaxes(title_text='Residual Error (MeV)', type='log')\
-                .update_layout(legend=dict(title='Method', yanchor="top", y=0.99, xanchor="right", x=0.99))
+                .update_layout(legend=dict(title='Method'))
     
     plotly_export(residual_fig, 'harmonic_oscillator\\residual_error')
 
