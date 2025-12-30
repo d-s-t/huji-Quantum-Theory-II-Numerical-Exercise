@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Callable
+from typing import Callable, Union
 from scipy.linalg import eig, eigh_tridiagonal
 
 def _W(V: Callable[[np.ndarray], np.ndarray], l: int, r: np.ndarray) -> np.ndarray:
@@ -16,7 +16,7 @@ def _W(V: Callable[[np.ndarray], np.ndarray], l: int, r: np.ndarray) -> np.ndarr
     """
     return V(r) + (l * (l + 1)) / (2 * r**2)
 
-def finite_difference_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray], r: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def finite_difference_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray], r: np.ndarray, *, eigvals_only: bool = False) -> Union[np.ndarray, tuple[np.ndarray, np.ndarray]]:
     """
     Finite difference method to solve the radial equation for the wave function
 
@@ -37,12 +37,16 @@ def finite_difference_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray
     main_diag = 1/dr**2 + _W(V, l, r)
     off_diag = - np.ones(len(r) - 1) / (2*dr**2)
 
+    if eigvals_only:
+        evals = eigh_tridiagonal(main_diag, off_diag, eigvals_only=True)
+        return evals
+    
     evals, evecs = eigh_tridiagonal(main_diag, off_diag)
     normalized_evecs = evecs / np.sqrt(np.trapezoid(evecs * np.conjugate(evecs), r, axis=0))
     return evals, normalized_evecs
 
 
-def numerov_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray], r: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def numerov_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray], r: np.ndarray, *, eigvals_only: bool = False) -> Union[np.ndarray, tuple[np.ndarray, np.ndarray]]:
     """
     Numerov method to solve the radial equation for the wave function
 
@@ -69,6 +73,10 @@ def numerov_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray], r: np.n
     N_main_diag = 5/6 * np.ones_like(r)
     N_off_diag = 1/12 * np.ones(len(r) - 1)
     N = np.diag(N_main_diag) + np.diag(N_off_diag, 1) + np.diag(N_off_diag, -1)
+
+    if eigvals_only:
+        evals = eig(H, N, right=False)[0]
+        return evals.real
 
     evals, evecs = eig(H, N)
     # sort eigenvalues (eig does not guarantee order) and take real part
