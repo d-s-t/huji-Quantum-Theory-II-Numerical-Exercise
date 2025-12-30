@@ -1,5 +1,5 @@
 from eigen_state_solvers import finite_difference_method_radial, numerov_method_radial
-from utils import harmonic_oscillator_potential, plotly_export
+from utils import plotly_export
 from sys import float_info
 import numpy as np
 from plotly import graph_objects as go
