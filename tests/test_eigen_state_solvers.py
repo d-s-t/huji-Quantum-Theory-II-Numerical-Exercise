@@ -14,7 +14,7 @@ class TestEigenStateSolvers(unittest.TestCase):
         self.R = 20.0  # fm
         self.K = 1000  # number of points
         self.l = 0  # azimuthal quantum number
-        self.r = np.linspace(float_info.epsilon, self.R, self.K)
+        self.r = np.linspace(0, self.R, self.K+1)[1:]
         self.evals_fd, self.evecs_fd = finite_difference_method_radial(self.l, self.V, self.r)
         self.evals_nm, self.evecs_nm = numerov_method_radial(self.l, self.V, self.r)
 
