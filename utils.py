@@ -82,18 +82,6 @@ def reduced_mass(*masses):
     """
     return 1 / sum(1/m for m in masses)
 
-
-def harmonic_oscillator_potential(r: np.ndarray) -> np.ndarray:
-    """
-    Example potential: Harmonic oscillator potential
-    V(r) = r^2 / 2
-    r: np.ndarray[float]
-        Array of distances in fm
-        shape: (N,)
-    """
-    return r**2/2
-
-
 ### <u|u> calculation
 def inner_product(u1: np.ndarray, u2: np.ndarray, r: np.ndarray) -> float:
     """

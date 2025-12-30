@@ -17,7 +17,7 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
     l = 0
     R = 10
     N_values = [40,80,120,240,360,480,600]
-    V = harmonic_oscillator_potential
+    from potential_functions import harmonic_oscillator_potential as V
     ground_state_energies_fd = np.empty_like(N_values, dtype=float)
     ground_state_energies_nm = np.empty_like(N_values, dtype=float)
     for i, N in enumerate(N_values):
@@ -61,7 +61,7 @@ def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.t
     residual_fig = go.Figure([go.Scatter(x=N_values, y=residual_error_fd, mode='markers+lines', name='Finite Difference'),
                    go.Scatter(x=N_values, y=residual_error_nm, mode='markers+lines', name='Numerov')])\
                 .update_xaxes(title_text='N', type='log')\
-                .update_yaxes(title_text='Residual Error (MeV)', type='log')\
+                .update_yaxes(title_text='Residual Error (MeV)', type='log', showexponent='all', exponentformat='power')\
                 .update_layout(legend=dict(title='Method'))
     
     plotly_export(residual_fig, 'harmonic_oscillator\\residual_error')
