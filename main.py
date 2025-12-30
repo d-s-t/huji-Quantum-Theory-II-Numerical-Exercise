@@ -5,7 +5,7 @@ import numpy as np
 from plotly import graph_objects as go
 from scipy.optimize import curve_fit
 
-def harmonic_ocillator_task(table_filename: str = 'harmonic_oscillator_results.tex'):
+def harmonic_oscillator_task(table_filename: str = 'harmonic_oscillator_results.tex'):
     """
     use both finite difference and numerov methods to solve the harmonic oscillator potential
     use l = 0, R = 10 and N= [40,80,120,240,360,480,600]
@@ -124,9 +124,9 @@ def hydrogen_atom_task():
             f.write(f'{l} & {q_values_fd[i]:.4f} & {q_values_nm[i]:.4f} \\' + '\n')
             f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
-        
+
 
 
 
 if __name__ == '__main__':
-    harmonic_ocillator_task()
+    harmonic_oscillator_task()
