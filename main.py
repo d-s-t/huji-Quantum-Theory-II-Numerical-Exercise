@@ -105,6 +105,16 @@ def hydrogen_atom_task():
     q_values_nm = []
     residual_error_fd = np.abs(ground_state_energies_fd + 0.5 / (l_values[:,None] + 1)**2)
     residual_error_nm = np.abs(ground_state_energies_nm + 0.5 / (l_values[:,None] + 1)**2)
+
+    residual_error_fig = go.Figure([go.Scatter(x=N_values, y=residual_error_fd[i], mode='markers+lines', name=f'FD l={l_values[i]}') for i in range(len(l_values))] +
+                                   [go.Scatter(x=N_values, y=residual_error_nm[i], mode='markers+lines', name=f'NM l={l_values[i]}') for i in range(len(l_values))])\
+                .update_xaxes(title_text='N', type='log')\
+                .update_yaxes(title_text='Residual Error (a.u.)', type='log', showexponent='all', exponentformat='power')\
+                .update_layout(legend=dict(title='Method and l'))
+    
+    plotly_export(residual_error_fig, 'hydrogen_atom\\residual_error')
+
+
     for i, l in enumerate(l_values):
         (_, q_fd), _ = curve_fit(error_func, N_values, residual_error_fd[i])
         (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm[i])
