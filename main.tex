@@ -10,6 +10,7 @@
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{decorations.markings}
 \usepackage{physics}
+\usepackage{caption}
 
 \usepackage{polyglossia}
 
@@ -30,19 +31,41 @@
 \maketitle
 
 \section{מתנד הרמוני}
-\begin{table}[h!]
-    \centering
-    \input{harmonic_oscillator_results}
-    \caption{אנרגיית היסוד עבור ערכי K שונים, בשתי השיטות - הפרשים סופיים ונומרוב.}
-    \label{tab:harmonic_oscillator_results}
-\end{table}
+\subsection{פונקציית הגל}
 \begin{figure}[h!]
-\centering
-\includegraphics[width=0.6\linewidth]{plots/harmonic_oscillator/residual_error.eps}
-    \caption{השגיאה השיורית ברמת היסוד (עבור $\epsilon=\frac{3}{2}$)}
-    \label{fig:harmonic_oscillator_residual_error}
+    \centering
+    \includegraphics[width=0.5\linewidth]{plots/harmonic_oscillator/ground_state_wavefunction_numerov_N600.eps}
+    \caption{פונקציית הגל של מצב היסוד. שיטת נומרוב עם $K=600$.}
+    \label{fig:placeholder}
 \end{figure}
 
+\begin{figure}[h!]
+    \centering
+    \begin{minipage}[t]{0.3\textwidth}
+        \subsection{אנרגיות רמת היסוד}
+        % \vspace{1pt} 
+        \centering
+        \input{harmonic_oscillator_results}
+        \captionof{table}{אנרגיית היסוד עבור ערכי K שונים, בשתי השיטות - הפרשים סופיים ונומרוב.}
+        \label{tab:harmonic_oscillator_results}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.65\textwidth}
+        \subsection{השגיאה השיורית}
+        \vspace{0pt} 
+        \centering
+        \includegraphics[width=0.9\linewidth, trim=0 0 0 1cm, clip]{plots/harmonic_oscillator/residual_error.eps}
+        \caption{השגיאה השיורית ברמת היסוד (עבור $\epsilon=\frac{3}{2}$)}
+        \label{fig:harmonic_oscillator_residual_error}
+    \end{minipage}%
+\end{figure}
+\subsection{קצב התכנסות}
+עבור שיטת הפרשים סופיים $q = 2.0068$\\
+עבור שיטת נומרוב $q = 4.0120$\\
+נשים לב שזה לפי הקירוב שלקחנו. בשיטת הפרשים סופיים השתמשנו בקירוב מסדר שני ב־$\Delta$ ובשיטת נומרוב השתמשנו בקירוב מסדר רביעי ב־$\Delta$. היות ומתקיים $\Delta=\frac{R}{N}$ אנחנו מקבלים תיקונים מסדר $O(N^{-2})$ עבור הפרשים סופיים ו־$O(N^{-4})$ עבור שיטת נומרוב.
+
+
+\section{אינטראקציה חשמלית}
 
 \include{harmonic_oscillator_figures}
 \end{document}
