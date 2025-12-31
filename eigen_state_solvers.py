@@ -91,3 +91,48 @@ def numerov_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray], r: np.n
     # return the real parts of the eigenvalues and eigenvectors
     normalized_evecs = evecs / np.sqrt(np.trapezoid(evecs * np.conjugate(evecs), r, axis=0))
     return evals.real, normalized_evecs
+
+
+def numerov_method_l0_firstorder(Z: int, r: np.ndarray, *, eigvals_only: bool = False) -> Union[np.ndarray, tuple[np.ndarray, np.ndarray]]:
+    """
+    Numerov method specialized for l=0 radial equation using first-order boundary condition at r=0.
+
+    V: Callable[[np.ndarray[Quantity["fm"]]], np.ndarray[Quantity["MeV"]]]
+        Potential energy function
+    r: np.ndarray[float]
+        Array of distances in fm
+        shape: (N,)
+    returns: tuple[np.ndarray[float], np.ndarray[float]]
+        Eigenvalues and eigenvectors of the Hamiltonian
+        shape: (N,), (N, N)
+    """
+    from potential_functions import coulomb_potential
+    V = coulomb_potential(Z)
+    dr = r[1] - r[0]
+
+    W_values = V(r)
+    H_main_diag = 1/(dr**2) + W_values * 5 / 6
+    H_1up_diag = -1/(2*dr**2) + W_values[1:]/12
+    H_1low_diag = -1/(2*dr**2) + W_values[:-1]/12
+    H = np.diag(H_main_diag) + np.diag(H_1up_diag, 1) + np.diag(H_1low_diag, -1)
+    H[0,0] -= Z / (12*dr)
+
+    N_main_diag = 5/6 * np.ones_like(r)
+    N_off_diag = 1/12 * np.ones(len(r) - 1)
+    N = np.diag(N_main_diag) + np.diag(N_off_diag, 1) + np.diag(N_off_diag, -1)
+
+    if eigvals_only:
+        evals = eig(H, N, right=False)
+        return evals.real
+
+    evals, evecs = eig(H, N)
+    # sort eigenvalues (eig does not guarantee order) and take real part
+    idx = evals.real.argsort()
+    evals = evals[idx]
+    evecs = evecs[:, idx]
+    
+    # return the real parts of the eigenvalues and eigenvectors
+    normalized_evecs = evecs / np.sqrt(np.trapezoid(evecs * np.conjugate(evecs), r, axis=0))
+    return evals.real, normalized_evecs
+
+
