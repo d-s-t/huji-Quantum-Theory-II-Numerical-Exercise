@@ -69,14 +69,12 @@ def harmonic_oscillator_task(table_filename: str = 'harmonic_oscillator_results.
     
     plotly_export(residual_fig, 'harmonic_oscillator\\residual_error')
 
-    (C_fd, q_fd), _ = curve_fit(error_func, N_values, residual_error_fd)
-    (C_nm, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm)
+    (_, q_fd), _ = curve_fit(error_func, N_values, residual_error_fd)
+    (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm)
     with open('harmonic_oscillator_q_fd.tex', 'w') as f:
         f.write(f'$q = {q_fd:.4f}$')
     with open('harmonic_oscillator_q_nm.tex', 'w') as f:
         f.write(f'$q = {q_nm:.4f}$')
-    print(f'Finite Difference Method: q = {q_fd:.4f}')
-    print(f'Numerov Method: q = {q_nm:.4f}')
 
 def hydrogen_atom_task():
     N_values = [80, 120, 240, 360, 480, 600]
@@ -180,6 +178,6 @@ def first_order_task():
 
 
 if __name__ == '__main__':
-    # harmonic_oscillator_task()
-    # hydrogen_atom_task()
+    harmonic_oscillator_task()
+    hydrogen_atom_task()
     first_order_task()
