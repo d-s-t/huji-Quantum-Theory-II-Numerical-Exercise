@@ -39,7 +39,7 @@ $$V(r) = \frac{r^2}{2}$$
     \centering
     \includegraphics[width=0.5\linewidth]{plots/harmonic_oscillator/ground_state_wavefunction_numerov_N600.eps}
     \caption{פונקציית הגל של מצב היסוד. שיטת נומרוב עם $K=600$.}
-    \label{fig:placeholder}
+    \label{fig:harmonic_oscillator_ground_state_wavefunction_numerov_N600}
 \end{figure}
 
 \begin{figure}[h!]
@@ -63,8 +63,8 @@ $$V(r) = \frac{r^2}{2}$$
     \end{minipage}%
 \end{figure}
 \subsection{קצב התכנסות}
-עבור שיטת הפרשים סופיים $q = 2.0068$\\
-עבור שיטת נומרוב $q = 4.0120$\\
+עבור שיטת הפרשים סופיים \input{harmonic_oscillator_q_fd}\\
+עבור שיטת נומרוב \input{harmonic_oscillator_q_nm}\\
 נשים לב שזה לפי הקירוב שלקחנו. בשיטת הפרשים סופיים השתמשנו בקירוב מסדר שני ב־$\Delta$ ובשיטת נומרוב השתמשנו בקירוב מסדר רביעי ב־$\Delta$. היות ומתקיים $\Delta=\frac{R}{N}$ אנחנו מקבלים תיקונים מסדר $O(N^{-2})$ עבור הפרשים סופיים ו־$O(N^{-4})$ עבור שיטת נומרוב.
 
 
@@ -102,8 +102,19 @@ $$V=-\frac{1}{r}$$
 עם זאת, בשיטת נומרוב אין התכנסות של הערכים, אלא התבדרות - זאת בגלל שתנאי השפה בראשית אינם נכונים.
 החלקים הבאים יעסקו בתיקונים לשיטת נומרוב.
 \subsection{תיקון מסדר ראשון}
-
-
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{plots/hydrogen_atom_l0_first_order/residual_error_l0_first_order.eps}
+    \caption{השגיאה השיורית עבור תיקון מסדר ראשון}
+    \label{fig:first_oreder_residual_error}
+\end{figure}
+\begin{table}[h!]
+    \centering
+        \centering
+        \input{hydrogen_atom_l0_first_order_results}
+        \caption{אנרגיית היסוד עבור ערכי K שונים בשיטת נומרוב עם תיקון מסדר ראשון.}
+        \label{tab:first_order_ground_energy}
+\end{table}
 
 
 \include{harmonic_oscillator_figures}
