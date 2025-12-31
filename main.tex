@@ -72,22 +72,33 @@ $$V(r) = \frac{r^2}{2}$$
 בחלק זה הפוטנציאל הוא 
 $$V(r) = -\frac{Z}{r}$$
 כאשר נתחיל עם אטום המימן בו $Z=1$.
-\subsection{אנרגיות רמת היסוד}
-\begin{table}[h!]
+\subsection{אנרגיות רמת היסוד והשגיאה השיורית}
+\begin{table}[h]
     \centering
         \centering
         \input{hydrogen_atom_results}
         \caption{אנרגיית היסוד עבור ערכי K שונים, בשתי השיטות - הפרשים סופיים ונומרוב.}
         \label{tab:hydrogen_atom_results}
 \end{table}
-\subsection{השגיאה השיורית}
-\begin{figure}[h!]
-        \vspace{0pt} 
+\begin{figure}[h]
+    \begin{minipage}[t]{0.65\textwidth}
         \centering
-        \includegraphics[width=0.9\linewidth, trim=0 0 0 1cm, clip]{plots/hydrogen_atom/residual_error.eps}
+        \includegraphics[width=\linewidth, trim=0 0 0 1cm, clip]{plots/hydrogen_atom/residual_error.eps}
         \caption{השגיאה השיורית ברמת היסוד (לעומת $\epsilon=\frac{3}{2}$)}
         \label{fig:hydrogen_atom_residual_error}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.25\textwidth}
+        \centering
+        \vspace{-100pt} 
+        \input{hydrogen_atom_convergence_rates}
+        \captionof{table}{ערכי q עבור ההתכנסות}
+        \label{tab:hydrogen_atom_convergence_rates}
+    \end{minipage}
 \end{figure}
+
+
+
 
 
 \include{harmonic_oscillator_figures}
