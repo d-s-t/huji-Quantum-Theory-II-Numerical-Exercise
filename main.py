@@ -92,7 +92,7 @@ def hydrogen_atom_task():
     with open('hydrogen_atom_results.tex', 'w') as f:
         f.write(r'\begin{tabular}{|c|' + 'c|'*len(N_values) + '}' + '\n')
         f.write(r'\hline' + '\n')
-        f.write(r'\diagbox[dir=NE, innerwidth = 3cm, height = 4ex]{$l$}{$K$} ' + ' & ' + ' & '.join(str(N) for N in N_values) + r' \\' + '\n')
+        f.write(r'\diagbox[dir=NE, innerwidth = 3cm, height = 4ex]{$K$}{$l$}' + ' & ' + ' & '.join(str(N) for N in N_values) + r' \\' + '\n')
         f.write(r'\hline' + '\n')
         for i, l in enumerate(l_values):
             f.write(f'{l} (FD) ' + ' & ' + ' & '.join(f'${ground_state_energies_fd[i,j]:.6f}$' for j in range(len(N_values))) + r' \\' + '\n')
