@@ -71,16 +71,17 @@ $$V(r) = \frac{r^2}{2}$$
 \section{אינטראקציה חשמלית}
 בחלק זה הפוטנציאל הוא 
 $$V(r) = -\frac{Z}{r}$$
-כאשר נתחיל עם אטום המימן בו $Z=1$.
-\subsection{אנרגיות רמת היסוד והשגיאה השיורית}
-\begin{table}[h]
+\subsection{אנרגיות רמת היסוד והשגיאה השיורית באטום המימן}
+עבור אטום המימן $Z=1$ כלומר הפוטנציאל הוא
+$$V=-\frac{1}{r}$$
+\begin{table}[h!]
     \centering
         \centering
         \input{hydrogen_atom_results}
         \caption{אנרגיית היסוד עבור ערכי K שונים, בשתי השיטות - הפרשים סופיים ונומרוב.}
         \label{tab:hydrogen_atom_results}
 \end{table}
-\begin{figure}[h]
+\begin{figure}[h!]
     \begin{minipage}[t]{0.65\textwidth}
         \centering
         \includegraphics[width=\linewidth, trim=0 0 0 1cm, clip]{plots/hydrogen_atom/residual_error.eps}
@@ -96,7 +97,11 @@ $$V(r) = -\frac{Z}{r}$$
         \label{tab:hydrogen_atom_convergence_rates}
     \end{minipage}
 \end{figure}
-
+\par
+ניתן לראות שההתכנסות בשיטת הפרשים סופיים היא עקבית עבור כל ערך של $l$. 
+עם זאת, בשיטת נומרוב אין התכנסות של הערכים, אלא התבדרות - זאת בגלל שתנאי השפה בראשית אינם נכונים.
+החלקים הבאים יעסקו בתיקונים לשיטת נומרוב.
+\subsection{תיקון מסדר ראשון}
 
 
 
