@@ -128,7 +128,7 @@ def hydrogen_atom_task():
         f.write(r'l & q (FD) & q (NM) \\' + '\n')
         f.write(r'\hline' + '\n')
         for i, l in enumerate(l_values):
-            f.write(f'{l} & {q_values_fd[i]:.4f} & {q_values_nm[i]:.4f} \\' + '\n')
+            f.write(f'{l} & ${q_values_fd[i]:.4f}$ & ${q_values_nm[i]:.4f}$' + r' \\' + '\n')
             f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
 
