@@ -1,14 +1,14 @@
 from eigen_state_solvers import finite_difference_method_radial, numerov_method_radial, numerov_method_l0_firstorder
 from utils import plotly_export
-from sys import float_info
 import numpy as np
 from plotly import graph_objects as go
 from scipy.optimize import curve_fit
+from os import path, makedirs
 
 def error_func(N, C, q):
     return C * N**(-q)
 
-def harmonic_oscillator_task(table_filename: str = 'harmonic_oscillator_results.tex'):
+def harmonic_oscillator_task(folder_name: str = 'harmonic_oscillator'):
     """
     use both finite difference and numerov methods to solve the harmonic oscillator potential
     use l = 0, R = 10 and N= [40,80,120,240,360,480,600]
@@ -17,6 +17,8 @@ def harmonic_oscillator_task(table_filename: str = 'harmonic_oscillator_results.
        plot the residual error eta = |epsilon - 3/2| as a function of N. use log-log scale.
     3. curve fit the error to a function of the form eta = C * N^{-q} and report the values of C and q.
     """
+    makedirs(path.join('results', folder_name), exist_ok=True)
+
     l = 0
     R = 10
     N_values = [40,80,120,240,360,480,600]
@@ -34,7 +36,7 @@ def harmonic_oscillator_task(table_filename: str = 'harmonic_oscillator_results.
                         .update_xaxes(title_text='r')\
                         .update_yaxes(title_text='u(r)')\
                         .update_layout(legend=dict(title='Method', yanchor="top", y=0.99, xanchor="right", x=0.99))
-        plotly_export(wave_function_fig, f'harmonic_oscillator\\wavefunction\\N{N}')
+        plotly_export(wave_function_fig, path.join(folder_name, 'wavefunction', f'N{N}'))
         
         ground_state_energies_fd[i] = evals_fd[0]
         ground_state_energies_nm[i] = evals_nm[0]
@@ -43,10 +45,10 @@ def harmonic_oscillator_task(table_filename: str = 'harmonic_oscillator_results.
     wave_function_fig = go.Figure([go.Scatter(x=r, y=evecs_nm[:,0], mode='lines', name='Numerov')])\
                         .update_xaxes(title_text='r')\
                         .update_yaxes(title_text='u(r)')
-    plotly_export(wave_function_fig, f'harmonic_oscillator\\ground_state_wavefunction_numerov_N600')
+    plotly_export(wave_function_fig, path.join(folder_name, 'ground_state_wavefunction_numerov_N600'))
 
     # write latex table of the ground state energy \epsilon for each N and each method.
-    with open(table_filename, 'w') as f:
+    with open(path.join('results', folder_name, 'ground_state_energies.tex'), 'w') as f:
         f.write(r'\begin{tabular}{|c|c|c|}' + '\n')
         f.write(r'\hline' + '\n')
         f.write(r'K & הפרשים סופיים & שיטת נומרוב \\' + '\n')
@@ -67,16 +69,18 @@ def harmonic_oscillator_task(table_filename: str = 'harmonic_oscillator_results.
                 .update_yaxes(title_text='Residual Error (MeV)', type='log', showexponent='all', exponentformat='power')\
                 .update_layout(legend=dict(title='Method'))
     
-    plotly_export(residual_fig, 'harmonic_oscillator\\residual_error')
+    plotly_export(residual_fig, path.join(folder_name, 'residual_error'))
 
     (_, q_fd), _ = curve_fit(error_func, N_values, residual_error_fd)
     (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm)
-    with open('harmonic_oscillator_q_fd.tex', 'w') as f:
+    with open(path.join('results', folder_name, 'q_fd.tex'), 'w') as f:
         f.write(f'$q = {q_fd:.4f}$')
-    with open('harmonic_oscillator_q_nm.tex', 'w') as f:
+    with open(path.join('results', folder_name, 'q_nm.tex'), 'w') as f:
         f.write(f'$q = {q_nm:.4f}$')
 
-def hydrogen_atom_task():
+def hydrogen_atom_task(folder_name: str = 'hydrogen_atom'):
+    makedirs(path.join('results', folder_name), exist_ok=True)
+
     N_values = [80, 120, 240, 360, 480, 600]
     l_values = np.array([0, 1, 2])
     R = 50
@@ -91,7 +95,7 @@ def hydrogen_atom_task():
             ground_state_energies_fd[i, N_values.index(N)] = evals_fd[0]
             ground_state_energies_nm[i, N_values.index(N)] = evals_nm[0]
     
-    with open('hydrogen_atom_results.tex', 'w') as f:
+    with open(path.join('results', folder_name, 'ground_state_energies.tex'), 'w') as f:
         f.write(r'\begin{tabular}{|c|' + 'c|'*len(N_values) + '}' + '\n')
         f.write(r'\hline' + '\n')
         f.write(r'\diagbox[dir=NE, innerwidth = 3cm, height = 4ex]{$K$}{$l$}' + ' & ' + ' & '.join(str(N) for N in N_values) + r' \\' + '\n')
@@ -103,8 +107,6 @@ def hydrogen_atom_task():
             f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
 
-    q_values_fd = []
-    q_values_nm = []
     residual_error_fd = np.abs(ground_state_energies_fd + 0.5 / (l_values[:,None] + 1)**2)
     residual_error_nm = np.abs(ground_state_energies_nm + 0.5 / (l_values[:,None] + 1)**2)
 
@@ -114,9 +116,11 @@ def hydrogen_atom_task():
                 .update_yaxes(title_text='Residual Error (a.u.)', type='log', showexponent='all', exponentformat='power')\
                 .update_layout(legend=dict(title='Method and l'))
     
-    plotly_export(residual_error_fig, 'hydrogen_atom\\residual_error')
+    plotly_export(residual_error_fig, path.join(folder_name, 'residual_error'))
 
 
+    q_values_fd = []
+    q_values_nm = []
     for i, l in enumerate(l_values):
         (_, q_fd), _ = curve_fit(error_func, N_values, residual_error_fd[i])
         (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm[i])
@@ -124,7 +128,7 @@ def hydrogen_atom_task():
         q_values_nm.append(q_nm)
     
     # write q values to latex table
-    with open('hydrogen_atom_convergence_rates.tex', 'w') as f:
+    with open(path.join('results', folder_name, 'convergence_rates.tex'), 'w') as f:
         f.write(r'\begin{tabular}{|c|c|c|}' + '\n')
         f.write(r'\hline' + '\n')
         f.write(r'l & q (FD) & q (NM) \\' + '\n')
@@ -135,13 +139,16 @@ def hydrogen_atom_task():
         f.write(r'\end{tabular}' + '\n')
 
 
-def first_order_task():
+def first_order_task(folder_name: str = 'first_order'):
     """
     do very simmilar to hydrogen atom task but use only numerov_method_l0_firstorder(Z: int, r: np.ndarray, *, eigvals_only: bool = False)
     """
+    makedirs(path.join('results', folder_name), exist_ok=True)
+
     N_values = [80, 120, 240, 360, 480, 600]
     R = 50
     Z = 1 # For hydrogen atom
+    from potential_functions import hydrogen_atom_potential as V
     
     ground_state_energies_nm_l0_first_order = np.empty_like(N_values, dtype=float)
     ground_state_energies_nm_l0_regular = np.empty_like(N_values, dtype=float)
@@ -150,17 +157,15 @@ def first_order_task():
         r = np.linspace(0, R, N + 1)[1:]
         evals_nm = numerov_method_l0_firstorder(Z, r, eigvals_only=True)
         ground_state_energies_nm_l0_first_order[i] = evals_nm[0]
+        evals_nm_regular = numerov_method_radial(0, V, r, eigvals_only=True)
+        ground_state_energies_nm_l0_regular[i] = evals_nm_regular[0]
             
-    with open('hydrogen_atom_l0_first_order_results.tex', 'w') as f:
+    with open(path.join('results', folder_name, 'ground_state_energies.tex'), 'w') as f:
         f.write(r'\begin{tabular}{|c|c|c|}' + '\n')
         f.write(r'\hline' + '\n')
         f.write(r'$K$ & שיטת נומרוב (סדר ראשון) & שיטת נומרוב \\' + '\n')
         f.write(r'\hline' + '\n')
         for i, N in enumerate(N_values):
-            r = np.linspace(0, R, N + 1)[1:]
-            from potential_functions import hydrogen_atom_potential as V
-            evals_nm_regular = numerov_method_radial(0, V, r, eigvals_only=True)
-            ground_state_energies_nm_l0_regular[i] = evals_nm_regular[0]
             f.write(f'{N} & ${ground_state_energies_nm_l0_first_order[i]:.6f}$ & ${ground_state_energies_nm_l0_regular[i]:.6f}$ \\\\' + '\n')
             f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
@@ -177,9 +182,10 @@ def first_order_task():
                 .update_yaxes(title_text='Residual Error (a.u.)', type='log', showexponent='all', exponentformat='power')\
                 .update_layout(legend=dict(title='Method and l'))
     
-    plotly_export(residual_error_fig, 'hydrogen_atom_l0_first_order\\residual_error_l0_first_order')
+    plotly_export(residual_error_fig, path.join(folder_name, 'residual_error'))
+
     (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm_l0_first_order)
-    with open('hydrogen_atom_q_nm_l0_first_order.tex', 'w') as f:
+    with open(path.join('results' ,folder_name, 'q_nm.tex'), 'w') as f:
         f.write(f'$q = {q_nm:.4f}$')
 
     

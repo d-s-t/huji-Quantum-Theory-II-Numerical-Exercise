@@ -48,7 +48,7 @@ $$V(r) = \frac{r^2}{2}$$
         \subsection{אנרגיות רמת היסוד}
         % \vspace{1pt} 
         \centering
-        \input{harmonic_oscillator_results}
+        \input{results/harmonic_oscillator/ground_state_energies}
         \captionof{table}{אנרגיית היסוד עבור ערכי K שונים, בשתי השיטות - הפרשים סופיים ונומרוב.}
         \label{tab:harmonic_oscillator_results}
     \end{minipage}
@@ -63,8 +63,8 @@ $$V(r) = \frac{r^2}{2}$$
     \end{minipage}%
 \end{figure}
 \subsection{קצב התכנסות}
-עבור שיטת הפרשים סופיים \input{harmonic_oscillator_q_fd}\\
-עבור שיטת נומרוב \input{harmonic_oscillator_q_nm}\\
+עבור שיטת הפרשים סופיים \input{results/harmonic_oscillator/q_fd}\\
+עבור שיטת נומרוב \input{results/harmonic_oscillator/q_nm}\\
 נשים לב שזה לפי הקירוב שלקחנו. בשיטת הפרשים סופיים השתמשנו בקירוב מסדר שני ב־$\Delta$ ובשיטת נומרוב השתמשנו בקירוב מסדר רביעי ב־$\Delta$. היות ומתקיים $\Delta=\frac{R}{N}$ אנחנו מקבלים תיקונים מסדר $O(N^{-2})$ עבור הפרשים סופיים ו־$O(N^{-4})$ עבור שיטת נומרוב.
 
 
@@ -77,7 +77,7 @@ $$V=-\frac{1}{r}$$
 \begin{table}[h!]
     \centering
         \centering
-        \input{hydrogen_atom_results}
+        \input{results/hydrogen_atom/ground_state_energies}
         \caption{אנרגיית היסוד עבור ערכי K שונים, בשתי השיטות - הפרשים סופיים ונומרוב.}
         \label{tab:hydrogen_atom_results}
 \end{table}
@@ -92,7 +92,7 @@ $$V=-\frac{1}{r}$$
     \begin{minipage}[t]{0.25\textwidth}
         \centering
         \vspace{-100pt} 
-        \input{hydrogen_atom_convergence_rates}
+        \input{results/hydrogen_atom/convergence_rates}
         \captionof{table}{ערכי q עבור ההתכנסות}
         \label{tab:hydrogen_atom_convergence_rates}
     \end{minipage}
