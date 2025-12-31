@@ -5,6 +5,9 @@ import numpy as np
 from plotly import graph_objects as go
 from scipy.optimize import curve_fit
 
+def error_func(N, C, q):
+    return C * N**(-q)
+
 def harmonic_oscillator_task(table_filename: str = 'harmonic_oscillator_results.tex'):
     """
     use both finite difference and numerov methods to solve the harmonic oscillator potential
@@ -66,9 +69,6 @@ def harmonic_oscillator_task(table_filename: str = 'harmonic_oscillator_results.
     
     plotly_export(residual_fig, 'harmonic_oscillator\\residual_error')
 
-    # curve fit the error to a function of the form \eta = C * N^{-q} and report the values of C and q.
-    def error_func(N, C, q):
-        return C * N**(-q)
     (_, q_fd), _ = curve_fit(error_func, N_values, residual_error_fd)
     (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm)
     print(f'Finite Difference Method: q = {q_fd:.4f}')
@@ -76,19 +76,19 @@ def harmonic_oscillator_task(table_filename: str = 'harmonic_oscillator_results.
 
 def hydrogen_atom_task():
     N_values = [80, 120, 240, 360, 480, 600]
-    l_values = [0, 1, 2]
+    l_values = np.array([0, 1, 2])
     R = 50
     from potential_functions import hydrogen_atom_potential as V
     ground_state_energies_fd = np.empty((len(l_values), len(N_values)), dtype=float)
     ground_state_energies_nm = np.empty((len(l_values), len(N_values)), dtype=float)
-    for l in l_values:
+    for i, l in enumerate(l_values):
         for N in N_values:
             r = np.linspace(0, R, N + 1)[1:]
-            evals_fd = finite_difference_method_radial(l, V, r, eigvals_only=False)
-            evals_nm = numerov_method_radial(l, V, r, eigvals_only=False)
-
-            ground_state_energies_fd[l_values.index(l), N_values.index(N)] = evals_fd[0]
-            ground_state_energies_nm[l_values.index(l), N_values.index(N)] = evals_nm[0]
+            evals_fd = finite_difference_method_radial(l, V, r, eigvals_only=True)
+            evals_nm = numerov_method_radial(l, V, r, eigvals_only=True)
+            ground_state_energies_fd[i, N_values.index(N)] = evals_fd[0]
+            ground_state_energies_nm[i, N_values.index(N)] = evals_nm[0]
+    
     with open('hydrogen_atom_results.tex', 'w') as f:
         f.write(r'\begin{tabular}{|c|' + 'c|'*len(N_values) + '}' + '\n')
         f.write(r'\hline' + '\n')
@@ -103,14 +103,11 @@ def hydrogen_atom_task():
 
     q_values_fd = []
     q_values_nm = []
+    residual_error_fd = np.abs(ground_state_energies_fd + 0.5 / (l_values[:,None] + 1)**2)
+    residual_error_nm = np.abs(ground_state_energies_nm + 0.5 / (l_values[:,None] + 1)**2)
     for i, l in enumerate(l_values):
-        residual_error_fd = np.abs(ground_state_energies_fd[i,:] + 0.5)
-        residual_error_nm = np.abs(ground_state_energies_nm[i,:] + 0.5)
-
-        def error_func(N, C, q):
-            return C * N**(-q)
-        (_, q_fd), _ = curve_fit(error_func, N_values, residual_error_fd)
-        (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm)
+        (_, q_fd), _ = curve_fit(error_func, N_values, residual_error_fd[i])
+        (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm[i])
         q_values_fd.append(q_fd)
         q_values_nm.append(q_nm)
     
@@ -129,4 +126,5 @@ def hydrogen_atom_task():
 
 
 if __name__ == '__main__':
-    harmonic_oscillator_task()
+    # harmonic_oscillator_task()
+    hydrogen_atom_task()
