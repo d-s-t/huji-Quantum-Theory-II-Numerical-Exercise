@@ -13,6 +13,8 @@
 \usepackage{caption}
 \usepackage{diagbox}
 
+\usepackage{hyperref}
+
 \usepackage{polyglossia}
 
 \setmainlanguage{hebrew}
@@ -21,6 +23,19 @@
 \newfontfamily{\hebrewfont}[Script=Hebrew]{Arial}
 \newfontfamily{\hebrewfontsf}[Script=Hebrew]{Arial}
 \newfontfamily{\hebrewfonttt}[Script=Hebrew]{Miriam Mono CLM Bold}
+\addto\captionshebrew{%
+  \renewcommand{\figureautorefname}{איור}%
+  \renewcommand{\tableautorefname}{טבלה}%
+  \renewcommand{\sectionautorefname}{סעיף}%
+  \renewcommand{\chapterautorefname}{פרק}%
+  \renewcommand{\equationautorefname}{משוואה}%
+}
+
+\usepackage[hebrew]{cleveref} % Must be loaded AFTER hyperref
+\crefname{figure}{איור}{איורים}
+\Crefname{figure}{איור}{איורים}
+\crefname{table}{טבלה}{טבלאות}
+\Crefname{table}{טבלה}{טבלאות}
 
 \setlength{\parindent}{0pt}
 
@@ -102,20 +117,63 @@ $$V=-\frac{1}{r}$$
 עם זאת, בשיטת נומרוב אין התכנסות של הערכים, אלא התבדרות - זאת בגלל שתנאי השפה בראשית אינם נכונים.
 החלקים הבאים יעסקו בתיקונים לשיטת נומרוב.
 \subsection{תיקון מסדר ראשון}
+נפתח את התיקון מסדר ראשן מצורה מפרושת כדי שיהיה לי יותר קל לעקוב...\\
+משוואה (4) היא 
+$$-\frac{u''(r)}{2}+W(r)u(r)=\epsilon u(r)$$
+כאשר
+$$W(r)=V(r)-\frac{l(l+1)}{2r^2}$$
+בסעיף זה $l=0,\ Z=1,\ V=-\frac{Z}{r}$ ולכן משוואה (4) מקבלת את הצורה
+$$-\frac{u''(r)}{2}-\frac{Z}{r}u(r)=\epsilon u(r)$$
+עבור $r$ קטן נפתח את $u(r)$ בטור טיילור, ונזכור שתנאי השפה מגדיר $u(0)=u_0=0$ ולכן
+$$u(r)=u'_0r+\frac{u''_0}{2}r^2 + \frac{u^{(3)}_0}{3!}r^3 + \frac{u^{(4)}_0}{4!}r^4 + O(r^5)$$
+ע"י גזירה פעמיים נקבל:
+$$u''(r)=u''_0+u^{(3)}_0r+\frac{u^{(4)}_0}{2}r^2 + O(r^3)$$
+כאשר נציב את זה במשוואה (4) נקבל
+$$-\frac{1}{2}\left(u''_0+u^{(3)}_0r+\frac{u^{(4)}_0}{2}r^2 + O(r^3)\right)-\frac{Z}{r}\left(u'_0r+\frac{u''_0}{2}r^2 + \frac{u^{(3)}_0}{3!}r^3 + O(r^4)\right)=\epsilon \left(u'_0r+\frac{u''_0}{2}r^2 + O(r^3)\right)$$
+השוויון חייב להיות נכון עבור המקדמים של כל חזקה של $r$ באופן בלתי תלוי, ולכן, כאשר מסתכלים על המקדמים של $r^0$, מקבלים את השוויון 
+$$u_0'=-\frac{u''_0}{2Z}$$
+מצד שני, כאשר מציבים $r=\Delta$ מקבלים את השוויון
+$$u(\Delta)=u_1=u_0'\Delta+O(\Delta^2) = - \frac{u''_0\Delta}{2Z}$$
+כלומר
+$$u''_0=-\frac{2Z}{\Delta}u_1$$
+במסמך של התרגיל היה רשום שהקשר הוא 
+$$u''_0=\frac{\alpha}{\Delta}u_1$$
+אני לא הבנתי את המעבר מ־$u''$ ל־$H^{(1)}$ אבל היה רשום שם
+$$H^{(1)}_{11}=H_{11}-\frac{1}{12}\frac{\alpha}{\Delta}$$
+ניסיתי גם $\alpha=Z$ (מתוך זה שהיה רשום $W\rightarrow\alpha/r$) וגם $\alpha=-2Z$ ולא ראיתי שיפור. בכלל לעומת שיטת נומרוב ללא התיקון.
+
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.5\linewidth]{plots/first_order/residual_error.eps}
+%     \caption{השגיאה השיורית עבור תיקון מסדר ראשון}
+%     \label{fig:first_oreder_residual_error}
+% \end{figure}
+% \begin{table}[h!]
+%     \centering
+%         \centering
+%         \input{results/first_order/ground_state_energies}
+%         \caption{אנרגיית היסוד עבור ערכי K שונים בשיטת נומרוב עם תיקון מסדר ראשון.}
+%         \label{tab:first_order_ground_energy}
+% \end{table}
 \begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.5\linewidth]{plots/first_order/residual_error.eps}
-    \caption{השגיאה השיורית עבור תיקון מסדר ראשון}
-    \label{fig:first_oreder_residual_error}
-\end{figure}
-\begin{table}[h!]
-    \centering
+    % \centering
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{plots/first_order/residual_error.eps}
+        \caption{השגיאה השיורית עבור תיקון מסדר ראשון}
+        \label{fig:first_oreder_residual_error}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \vspace{-4cm}
         \centering
         \input{results/first_order/ground_state_energies}
-        \caption{אנרגיית היסוד עבור ערכי K שונים בשיטת נומרוב עם תיקון מסדר ראשון.}
+        \captionof{table}{אנרגיית היסוד עבור ערכי K שונים בשיטת נומרוב עם תיקון מסדר ראשון.}
         \label{tab:first_order_ground_energy}
-\end{table}
-\input{results/first_order/q_nm}
+    \end{minipage}%
+\end{figure}
+ב\autoref{fig:first_oreder_residual_error} וב\autoref{tab:first_order_ground_energy} ניתן לראות אם התוצאות עבור $\alpha=-2Z$. 
+בנוסף מתקיים כי הקבוע ממהתאמה הוא \input{results/first_order/q_nm}
 
 \include{harmonic_oscillator_figures}
 \end{document}
