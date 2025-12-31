@@ -144,6 +144,7 @@ def first_order_task():
     Z = 1 # For hydrogen atom
     
     ground_state_energies_nm_l0_first_order = np.empty_like(N_values, dtype=float)
+    ground_state_energies_nm_l0_regular = np.empty_like(N_values, dtype=float)
     
     for i, N in enumerate(N_values):
         r = np.linspace(0, R, N + 1)[1:]
@@ -151,19 +152,27 @@ def first_order_task():
         ground_state_energies_nm_l0_first_order[i] = evals_nm[0]
             
     with open('hydrogen_atom_l0_first_order_results.tex', 'w') as f:
-        f.write(r'\begin{tabular}{|c|c|}' + '\n')
+        f.write(r'\begin{tabular}{|c|c|c|}' + '\n')
         f.write(r'\hline' + '\n')
-        f.write(r'$K$ & שיטת נומרוב (סדר ראשון) \\' + '\n')
+        f.write(r'$K$ & שיטת נומרוב (סדר ראשון) & שיטת נומרוב \\' + '\n')
         f.write(r'\hline' + '\n')
-        for N, e_nm in zip(N_values, ground_state_energies_nm_l0_first_order):
-            f.write(f'{N} & ${e_nm:.6f}$ \\\\' + '\n')
+        for i, N in enumerate(N_values):
+            r = np.linspace(0, R, N + 1)[1:]
+            from potential_functions import hydrogen_atom_potential as V
+            evals_nm_regular = numerov_method_radial(0, V, r, eigvals_only=True)
+            ground_state_energies_nm_l0_regular[i] = evals_nm_regular[0]
+            f.write(f'{N} & ${ground_state_energies_nm_l0_first_order[i]:.6f}$ & ${ground_state_energies_nm_l0_regular[i]:.6f}$ \\\\' + '\n')
             f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
 
     exact_energy_l0 = -0.5 # for l=0, n=1, E = -Z^2/(2n^2) = -1^2/(2*1^2) = -0.5 a.u.
     residual_error_nm_l0_first_order = np.abs(ground_state_energies_nm_l0_first_order - exact_energy_l0)
+    residual_error_nm_l0_regular = np.abs(ground_state_energies_nm_l0_regular - exact_energy_l0)
 
-    residual_error_fig = go.Figure([go.Scatter(x=N_values, y=residual_error_nm_l0_first_order, mode='markers+lines', name=f'NM l=0')])\
+    residual_error_fig = go.Figure([
+        go.Scatter(x=N_values, y=residual_error_nm_l0_first_order, mode='markers+lines', name=f'NM l=0 (First Order)'),
+        go.Scatter(x=N_values, y=residual_error_nm_l0_regular, mode='markers+lines', name=f'NM l=0 (Regular)')
+    ])\
                 .update_xaxes(title_text='N', type='log')\
                 .update_yaxes(title_text='Residual Error (a.u.)', type='log', showexponent='all', exponentformat='power')\
                 .update_layout(legend=dict(title='Method and l'))
