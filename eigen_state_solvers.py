@@ -50,6 +50,10 @@ def numerov_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray], r: np.n
     """
     Numerov method to solve the radial equation for the wave function
 
+    Note: This method assumes the potential is smooth. It may produce inaccurate
+    results for potentials with singularities at r=0 (like Coulomb -1/r) due to
+    the breakdown of the Taylor expansion and boundary term handling.
+
     l: int
         Azimuthal quantum number
     V: Callable[[np.ndarray[Quantity["fm"]]], np.ndarray[Quantity["MeV"]]]
