@@ -75,7 +75,7 @@ def numerov_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray], r: np.n
     N = np.diag(N_main_diag) + np.diag(N_off_diag, 1) + np.diag(N_off_diag, -1)
 
     if eigvals_only:
-        evals = eig(H, N, right=False)[0]
+        evals = eig(H, N, right=False)
         return evals.real
 
     evals, evecs = eig(H, N)
