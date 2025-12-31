@@ -1,4 +1,4 @@
-from eigen_state_solvers import finite_difference_method_radial, numerov_method_radial
+from eigen_state_solvers import finite_difference_method_radial, numerov_method_radial, numerov_method_l0_firstorder
 from utils import plotly_export
 from sys import float_info
 import numpy as np
@@ -69,8 +69,12 @@ def harmonic_oscillator_task(table_filename: str = 'harmonic_oscillator_results.
     
     plotly_export(residual_fig, 'harmonic_oscillator\\residual_error')
 
-    (_, q_fd), _ = curve_fit(error_func, N_values, residual_error_fd)
-    (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm)
+    (C_fd, q_fd), _ = curve_fit(error_func, N_values, residual_error_fd)
+    (C_nm, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm)
+    with open('harmonic_oscillator_q_fd.tex', 'w') as f:
+        f.write(f'$q = {q_fd:.4f}$')
+    with open('harmonic_oscillator_q_nm.tex', 'w') as f:
+        f.write(f'$q = {q_nm:.4f}$')
     print(f'Finite Difference Method: q = {q_fd:.4f}')
     print(f'Numerov Method: q = {q_nm:.4f}')
 
@@ -133,8 +137,49 @@ def hydrogen_atom_task():
         f.write(r'\end{tabular}' + '\n')
 
 
+def first_order_task():
+    """
+    do very simmilar to hydrogen atom task but use only numerov_method_l0_firstorder(Z: int, r: np.ndarray, *, eigvals_only: bool = False)
+    """
+    N_values = [80, 120, 240, 360, 480, 600]
+    R = 50
+    Z = 1 # For hydrogen atom
+    
+    ground_state_energies_nm_l0_first_order = np.empty_like(N_values, dtype=float)
+    
+    for i, N in enumerate(N_values):
+        r = np.linspace(0, R, N + 1)[1:]
+        evals_nm = numerov_method_l0_firstorder(Z, r, eigvals_only=True)
+        ground_state_energies_nm_l0_first_order[i] = evals_nm[0]
+            
+    with open('hydrogen_atom_l0_first_order_results.tex', 'w') as f:
+        f.write(r'\begin{tabular}{|c|c|}' + '\n')
+        f.write(r'\hline' + '\n')
+        f.write(r'$K$ & שיטת נומרוב (סדר ראשון) \\' + '\n')
+        f.write(r'\hline' + '\n')
+        for N, e_nm in zip(N_values, ground_state_energies_nm_l0_first_order):
+            f.write(f'{N} & ${e_nm:.6f}$ \\\\' + '\n')
+            f.write(r'\hline' + '\n')
+        f.write(r'\end{tabular}' + '\n')
+
+    exact_energy_l0 = -0.5 # for l=0, n=1, E = -Z^2/(2n^2) = -1^2/(2*1^2) = -0.5 a.u.
+    residual_error_nm_l0_first_order = np.abs(ground_state_energies_nm_l0_first_order - exact_energy_l0)
+
+    residual_error_fig = go.Figure([go.Scatter(x=N_values, y=residual_error_nm_l0_first_order, mode='markers+lines', name=f'NM l=0')])\
+                .update_xaxes(title_text='N', type='log')\
+                .update_yaxes(title_text='Residual Error (a.u.)', type='log', showexponent='all', exponentformat='power')\
+                .update_layout(legend=dict(title='Method and l'))
+    
+    plotly_export(residual_error_fig, 'hydrogen_atom_l0_first_order\\residual_error_l0_first_order')
+    (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm_l0_first_order)
+    with open('hydrogen_atom_q_nm_l0_first_order.tex', 'w') as f:
+        f.write(f'$q = {q_nm:.4f}$')
+
+    
+
 
 
 if __name__ == '__main__':
     # harmonic_oscillator_task()
-    hydrogen_atom_task()
+    # hydrogen_atom_task()
+    first_order_task()
