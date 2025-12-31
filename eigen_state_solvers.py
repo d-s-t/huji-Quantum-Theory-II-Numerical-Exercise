@@ -68,10 +68,10 @@ def numerov_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray], r: np.n
     """
     dr = r[1] - r[0]
 
-    W_values = _W(V, l, r)
-    H_main_diag = 1/(dr**2) + W_values * 5 / 6
-    H_1up_diag = -1/(2*dr**2) + W_values[1:]/12
-    H_1low_diag = -1/(2*dr**2) + W_values[:-1]/12
+    W = _W(V, l, r)
+    H_main_diag = 1/(dr**2) + W * 5 / 6
+    H_1up_diag = -1/(2*dr**2) + W[1:]/12
+    H_1low_diag = -1/(2*dr**2) + W[:-1]/12
     H = np.diag(H_main_diag) + np.diag(H_1up_diag, 1) + np.diag(H_1low_diag, -1)
 
     N_main_diag = 5/6 * np.ones_like(r)
@@ -93,7 +93,7 @@ def numerov_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray], r: np.n
     return evals.real, normalized_evecs
 
 
-def numerov_method_l0_firstorder(Z: int, r: np.ndarray, *, eigvals_only: bool = False) -> Union[np.ndarray, tuple[np.ndarray, np.ndarray]]:
+def numerov_method_l0_firstorder(Z: int, R: float, K: int, *, eigvals_only: bool = False) -> Union[np.ndarray, tuple[np.ndarray, np.ndarray]]:
     """
     Numerov method specialized for l=0 radial equation using first-order boundary condition at r=0.
 
@@ -108,18 +108,18 @@ def numerov_method_l0_firstorder(Z: int, r: np.ndarray, *, eigvals_only: bool = 
     """
     from potential_functions import coulomb_potential
     V = coulomb_potential(Z)
-    dr = r[1] - r[0]
+    dr = R / K
+    r = np.linspace(dr, R, K)
 
-    W_values = V(r)
-    H_main_diag = 1/(dr**2) + W_values * 5 / 6
-    H_1up_diag = -1/(2*dr**2) + W_values[1:]/12
-    H_1low_diag = -1/(2*dr**2) + W_values[:-1]/12
-    H = np.diag(H_main_diag) + np.diag(H_1up_diag, 1) + np.diag(H_1low_diag, -1)
-    H[0,0] -= Z / (12*dr)
-
-    N_main_diag = 5/6 * np.ones_like(r)
-    N_off_diag = 1/12 * np.ones(len(r) - 1)
+    N_main_diag = np.full_like(r, 5/6)
+    N_off_diag = np.full(len(r) - 1, 1/12)
     N = np.diag(N_main_diag) + np.diag(N_off_diag, 1) + np.diag(N_off_diag, -1)
+
+    W = V(r)
+    H_main_diag = 1/(dr**2) + W * 5 / 6
+    H_off_diag = -1 / (2 * dr**2) + W/12
+    H = np.diag(H_main_diag) + np.diag(H_off_diag[1:], 1) + np.diag(H_off_diag[:-1], -1)
+    H[0,0] += Z / (6*dr)
 
     if eigvals_only:
         evals = eig(H, N, right=False)

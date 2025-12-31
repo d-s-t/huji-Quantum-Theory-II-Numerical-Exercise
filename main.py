@@ -54,7 +54,7 @@ def harmonic_oscillator_task(folder_name: str = 'harmonic_oscillator'):
         f.write(r'K & הפרשים סופיים & שיטת נומרוב \\' + '\n')
         f.write(r'\hline' + '\n')
         for N, e_fd, e_nm in zip(N_values, ground_state_energies_fd, ground_state_energies_nm):
-            f.write(f'{N} & {e_fd:.6f} & {e_nm:.6f} \\\\' + '\n')
+            f.write(f'{N} & {e_fd:.6g} & {e_nm:.6g} \\\\' + '\n')
             f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
     
@@ -101,9 +101,9 @@ def hydrogen_atom_task(folder_name: str = 'hydrogen_atom'):
         f.write(r'\diagbox[dir=NE, innerwidth = 3cm, height = 4ex]{$K$}{$l$}' + ' & ' + ' & '.join(str(N) for N in N_values) + r' \\' + '\n')
         f.write(r'\hline' + '\n')
         for i, l in enumerate(l_values):
-            f.write(f'{l} (FD) ' + ' & ' + ' & '.join(f'${ground_state_energies_fd[i,j]:.6f}$' for j in range(len(N_values))) + r' \\' + '\n')
+            f.write(f'{l} (FD) ' + ' & ' + ' & '.join(f'${ground_state_energies_fd[i,j]:.4g}$' for j in range(len(N_values))) + r' \\' + '\n')
             f.write(r'\hline' + '\n')
-            f.write(f'{l} (NM) ' + ' & ' + ' & '.join(f'${ground_state_energies_nm[i,j]:.6f}$' for j in range(len(N_values))) + r' \\' + '\n')
+            f.write(f'{l} (NM) ' + ' & ' + ' & '.join(f'${ground_state_energies_nm[i,j]:.4g}$' for j in range(len(N_values))) + r' \\' + '\n')
             f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
 
@@ -131,10 +131,10 @@ def hydrogen_atom_task(folder_name: str = 'hydrogen_atom'):
     with open(path.join('results', folder_name, 'convergence_rates.tex'), 'w') as f:
         f.write(r'\begin{tabular}{|c|c|c|}' + '\n')
         f.write(r'\hline' + '\n')
-        f.write(r'l & q (FD) & q (NM) \\' + '\n')
+        f.write(r'$l$ & q (FD) & q (NM) \\' + '\n')
         f.write(r'\hline' + '\n')
         for i, l in enumerate(l_values):
-            f.write(f'{l} & ${q_values_fd[i]:.4f}$ & ${q_values_nm[i]:.4f}$' + r' \\' + '\n')
+            f.write(f'{l} & ${q_values_fd[i]:.6g}$ & ${q_values_nm[i]:.6g}$' + r' \\' + '\n')
             f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
 
@@ -155,7 +155,7 @@ def first_order_task(folder_name: str = 'first_order'):
     
     for i, N in enumerate(N_values):
         r = np.linspace(0, R, N + 1)[1:]
-        evals_nm = numerov_method_l0_firstorder(Z, r, eigvals_only=True)
+        evals_nm = numerov_method_l0_firstorder(Z, R, N, eigvals_only=True)
         ground_state_energies_nm_l0_first_order[i] = evals_nm[0]
         evals_nm_regular = numerov_method_radial(0, V, r, eigvals_only=True)
         ground_state_energies_nm_l0_regular[i] = evals_nm_regular[0]
@@ -166,7 +166,7 @@ def first_order_task(folder_name: str = 'first_order'):
         f.write(r'$K$ & שיטת נומרוב (סדר ראשון) & שיטת נומרוב \\' + '\n')
         f.write(r'\hline' + '\n')
         for i, N in enumerate(N_values):
-            f.write(f'{N} & ${ground_state_energies_nm_l0_first_order[i]:.6f}$ & ${ground_state_energies_nm_l0_regular[i]:.6f}$ \\\\' + '\n')
+            f.write(f'{N} & ${ground_state_energies_nm_l0_first_order[i]:.6g}$ & ${ground_state_energies_nm_l0_regular[i]:.6g}$ \\\\' + '\n')
             f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
 
