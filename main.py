@@ -1,4 +1,4 @@
-from eigen_state_solvers import finite_difference_method_radial, numerov_method_radial, numerov_method_coulomb_l0_1st_order, numerov_method_coulomb_l0_2nd_order
+from eigen_state_solvers import *
 from utils import plotly_export
 import numpy as np
 from plotly import graph_objects as go
@@ -231,7 +231,39 @@ def second_order_task(folder_name: str = 'second_order'):
         f.write(f'תיקון מסדר שני & ${q_nm_o2:.6g}$ \\\\' + '\n')
         f.write(r'\end{tabular}' + '\n')
 
-
+def second_order_l1_task(folder_name: str = 'second_order_l1'):
+    """
+    use numerov_method_coulomb_l1_2nd_order to solve for l=1
+    compare the results to the regular numerov method
+    """
+    makedirs(path.join('results', folder_name), exist_ok=True)
+    N_values = [80, 120, 240, 360, 480, 600]
+    R = 50
+    Z = 1 # For hydrogen atom
+    from potential_functions import hydrogen_atom_potential as V
+    ground_state_energies_nm_l1 = np.fromiter((numerov_method_radial(1, V, np.linspace(0, R, N + 1)[1:], eigvals_only=True)[0] for N in N_values), dtype=float)
+    ground_state_energies_nm_l1_second_order = np.fromiter((numerov_method_coulomb_l1_2nd_order(Z, R, N, eigvals_only=True)[0] for N in N_values), dtype=float)
+    exact_energy_l1 = -0.5 / (1 + 1)**2 # for l=1, n=2, E = -Z^2/(2n^2) = -1^2/(2*2^2) = -0.125 a.u.
+    residual_error_nm_l1 = np.abs(ground_state_energies_nm_l1 - exact_energy_l1)
+    residual_error_nm_l1_second_order = np.abs(ground_state_energies_nm_l1_second_order - exact_energy_l1)  
+    residual_error_fig = go.Figure([
+        go.Scatter(x=N_values, y=residual_error_nm_l1, mode='markers+lines', name=f'NM (Regular)'),
+        go.Scatter(x=N_values, y=residual_error_nm_l1_second_order, mode='markers+lines', name=f'NM (Second Order)')
+    ])\
+                .update_xaxes(title_text='N', type='log')\
+                .update_yaxes(title_text='Residual Error (a.u.)', type='log', showexponent='all', exponentformat='power')\
+                .update_layout(legend=dict(title='Method and l'))
+    plotly_export(residual_error_fig, path.join(folder_name, 'residual_error'))
+    (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm_l1)
+    (_, q_nm_o2), _ = curve_fit(error_func, N_values, residual_error_nm_l1_second_order)
+    with open(path.join('results' ,folder_name, 'convergence_rates.tex'), 'w') as f:
+        f.write(r'\begin{tabular}{c c}' + '\n')
+        f.write(r'תיקון & $q$ \\' + '\n')
+        f.write(r'\hline' + '\n')
+        f.write(f'ללא תיקון & ${q_nm:.6g}$ \\\\' + '\n')
+        f.write(f'תיקון מסדר שני & ${q_nm_o2:.6g}$ \\\\' + '\n')
+        f.write(r'\end{tabular}' + '\n')
+    
 
 
 if __name__ == '__main__':
@@ -239,3 +271,4 @@ if __name__ == '__main__':
     hydrogen_atom_task()
     first_order_task()
     second_order_task()
+    second_order_l1_task()
