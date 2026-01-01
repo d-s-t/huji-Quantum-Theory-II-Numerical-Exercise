@@ -174,7 +174,7 @@ $$u''_0=\frac{2Z}{Z\Delta^2-\Delta}u_1\quad\Rightarrow\quad H^{(2)}_{11} = H_{11
     \begin{minipage}[t]{0.45\textwidth}
         \centering
         \includegraphics[width=\linewidth]{plots/second_order/residual_error.eps}
-        \caption{השגיאה השיורית השוואה בין המצב ללא תיקון, תיקון מסדר ראשון ותיקון מסדר שני תיקון מסדר שני}
+        \caption{השגיאה השיורית השוואה בין המצב ללא תיקון, תיקון מסדר ראשון ותיקון מסדר שני }
         \label{fig:second_order_residual_error}
     \end{minipage}
     \hfill
@@ -199,6 +199,22 @@ $$u_1=u'_0\Delta+u''_0\Delta^2 + O(\Delta^3) \approx u''_0\Delta^2$$
 $$u''_0 = \frac{2}{2\Delta^2}u_1 \quad\Rightarrow\quad H^{(2)}_{11} = H_{11} + \frac{1}{12}\frac{1}{\Delta^2}$$
 נשים לב שהתיקוןוב מסדר ראשון שלו נופל ונשארים עם תיקונים מסדר שני ומעלה. תוצאה זו מתאימה לכך שעבור $l$ גדול יותר ההתכנסות הייתה יותר מהירה.
 נשווה בין התוצאות עם התקון לתוצאות ללא התיקון
+\begin{figure}[h!]
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{plots/second_order_l1/residual_error.eps}
+        \caption{השגיאה השיורית השוואה בין המצב ללא תיקון, ותיקון מסדר שני עבור $l=1$}
+        \label{fig:second_order_residual_error}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \vspace{-2cm}
+        \centering
+        \input{results/second_order_l1/convergence_rates}
+        \captionof{table}{קצב ההתכנסות עבור רמות התיקון השונות עבור $l=1$}
+        \label{tab:second_order_convergence_rates}
+    \end{minipage}
+\end{figure}
 
 
 \include{harmonic_oscillator_figures}
