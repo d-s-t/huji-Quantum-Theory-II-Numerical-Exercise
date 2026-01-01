@@ -184,8 +184,11 @@ def first_order_task(folder_name: str = 'first_order'):
     
     plotly_export(residual_error_fig, path.join(folder_name, 'residual_error'))
 
-    (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm_l0_first_order)
-    with open(path.join('results' ,folder_name, 'q_nm.tex'), 'w') as f:
+    (_, q_nm_o1), _ = curve_fit(error_func, N_values, residual_error_nm_l0_first_order)
+    (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm_l0_regular)
+    with open(path.join('results' ,folder_name, 'q_nm_o1.tex'), 'w') as f:
+        f.write(f'$q = {q_nm_o1:.4f}$')
+    with open(path.join('results', folder_name, 'q_nm.tex'), 'w') as f:
         f.write(f'$q = {q_nm:.4f}$')
 
     
