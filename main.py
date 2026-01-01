@@ -88,12 +88,12 @@ def hydrogen_atom_task(folder_name: str = 'hydrogen_atom'):
     ground_state_energies_fd = np.empty((len(l_values), len(N_values)), dtype=float)
     ground_state_energies_nm = np.empty((len(l_values), len(N_values)), dtype=float)
     for i, l in enumerate(l_values):
-        for N in N_values:
+        for j, N in enumerate(N_values):
             r = np.linspace(0, R, N + 1)[1:]
             evals_fd = finite_difference_method_radial(l, V, r, eigvals_only=True)
             evals_nm = numerov_method_radial(l, V, r, eigvals_only=True)
-            ground_state_energies_fd[i, N_values.index(N)] = evals_fd[0]
-            ground_state_energies_nm[i, N_values.index(N)] = evals_nm[0]
+            ground_state_energies_fd[i, j] = evals_fd[0]
+            ground_state_energies_nm[i, j] = evals_nm[0]
     
     with open(path.join('results', folder_name, 'ground_state_energies.tex'), 'w') as f:
         f.write(r'\begin{tabular}{|c|' + 'c|'*len(N_values) + '}' + '\n')
@@ -102,8 +102,8 @@ def hydrogen_atom_task(folder_name: str = 'hydrogen_atom'):
         f.write(r'\hline' + '\n')
         for i, l in enumerate(l_values):
             f.write(f'{l} (FD) ' + ' & ' + ' & '.join(f'${ground_state_energies_fd[i,j]:.4g}$' for j in range(len(N_values))) + r' \\' + '\n')
-            f.write(r'\hline' + '\n')
-            f.write(f'{l} (NM) ' + ' & ' + ' & '.join(f'${ground_state_energies_nm[i,j]:.4g}$' for j in range(len(N_values))) + r' \\' + '\n')
+            # f.write(r'\hline' + '\n')
+            f.write(f'\\ (NM) ' + ' & ' + ' & '.join(f'${ground_state_energies_nm[i,j]:.4g}$' for j in range(len(N_values))) + r' \\' + '\n')
             f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
 
