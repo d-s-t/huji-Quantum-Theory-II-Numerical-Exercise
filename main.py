@@ -49,13 +49,13 @@ def harmonic_oscillator_task(folder_name: str = 'harmonic_oscillator'):
 
     # write latex table of the ground state energy \epsilon for each N and each method.
     with open(path.join('results', folder_name, 'ground_state_energies.tex'), 'w') as f:
-        f.write(r'\begin{tabular}{|c|c|c|}' + '\n')
-        f.write(r'\hline' + '\n')
+        f.write(r'\begin{tabular}{c c c}' + '\n')
+        # f.write(r'\hline' + '\n')
         f.write(r'K & הפרשים סופיים & שיטת נומרוב \\' + '\n')
         f.write(r'\hline' + '\n')
         for N, e_fd, e_nm in zip(N_values, ground_state_energies_fd, ground_state_energies_nm):
             f.write(f'{N} & {e_fd:.6g} & {e_nm:.6g} \\\\' + '\n')
-            f.write(r'\hline' + '\n')
+            # f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
     
     # plot the residual error \eta = |\epsilon - 3/2| as a function of N. use log-log scale.
@@ -129,13 +129,13 @@ def hydrogen_atom_task(folder_name: str = 'hydrogen_atom'):
     
     # write q values to latex table
     with open(path.join('results', folder_name, 'convergence_rates.tex'), 'w') as f:
-        f.write(r'\begin{tabular}{|c|c|c|}' + '\n')
-        f.write(r'\hline' + '\n')
+        f.write(r'\begin{tabular}{c c c}' + '\n')
+        # f.write(r'\hline' + '\n')
         f.write(r'$l$ & q (FD) & q (NM) \\' + '\n')
         f.write(r'\hline' + '\n')
         for i, l in enumerate(l_values):
             f.write(f'{l} & ${q_values_fd[i]:.6g}$ & ${q_values_nm[i]:.6g}$' + r' \\' + '\n')
-            f.write(r'\hline' + '\n')
+            # f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
 
 
@@ -161,13 +161,13 @@ def first_order_task(folder_name: str = 'first_order'):
         ground_state_energies_nm_l0_regular[i] = evals_nm_regular[0]
             
     with open(path.join('results', folder_name, 'ground_state_energies.tex'), 'w') as f:
-        f.write(r'\begin{tabular}{|c|c|c|}' + '\n')
-        f.write(r'\hline' + '\n')
+        f.write(r'\begin{tabular}{c c c}' + '\n')
+        # f.write(r'\hline' + '\n')
         f.write(r'$K$ & שיטת נומרוב (סדר ראשון) & שיטת נומרוב \\' + '\n')
         f.write(r'\hline' + '\n')
         for i, N in enumerate(N_values):
             f.write(f'{N} & ${ground_state_energies_nm_l0_first_order[i]:.6g}$ & ${ground_state_energies_nm_l0_regular[i]:.6g}$ \\\\' + '\n')
-            f.write(r'\hline' + '\n')
+            # f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
 
     exact_energy_l0 = -0.5 # for l=0, n=1, E = -Z^2/(2n^2) = -1^2/(2*1^2) = -0.5 a.u.
