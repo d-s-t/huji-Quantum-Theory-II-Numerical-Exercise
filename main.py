@@ -224,11 +224,11 @@ def second_order_task(folder_name: str = 'second_order'):
     (_, q_nm_o2), _ = curve_fit(error_func, N_values, residual_error_nm_l0_second_order)
     with open(path.join('results' ,folder_name, 'convergence_rates.tex'), 'w') as f:
         f.write(r'\begin{tabular}{c c}' + '\n')
-        f.write(r'Method & $q$ \\' + '\n')
+        f.write(r'תיקון & $q$ \\' + '\n')
         f.write(r'\hline' + '\n')
-        f.write(f'שיטת נומרוב & ${q_nm:.6g}$ \\\\' + '\n')
-        f.write(f'שיטת נומרוב (סדר ראשון) & ${q_nm_o1:.6g}$ \\\\' + '\n')
-        f.write(f'שיטת נומרוב (סדר שני) & ${q_nm_o2:.6g}$ \\\\' + '\n')
+        f.write(f'ללא תיקון & ${q_nm:.6g}$ \\\\' + '\n')
+        f.write(f'תיקון מסדר ראשון & ${q_nm_o1:.6g}$ \\\\' + '\n')
+        f.write(f'תיקון מסדר שני & ${q_nm_o2:.6g}$ \\\\' + '\n')
         f.write(r'\end{tabular}' + '\n')
 
 
