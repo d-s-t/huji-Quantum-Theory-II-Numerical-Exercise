@@ -211,9 +211,9 @@ def second_order_task(folder_name: str = 'second_order'):
     residual_error_nm_l0_first_order = np.abs(ground_state_energies_nm_l0_first_order - exact_energy_l0)
     residual_error_nm_l0_second_order = np.abs(ground_state_energies_nm_l0_second_order - exact_energy_l0)  
     residual_error_fig = go.Figure([
-        go.Scatter(x=N_values, y=residual_error_nm_l0_second_order, mode='markers+lines', name=f'NM (Second Order)'),
+        go.Scatter(x=N_values, y=residual_error_nm_l0, mode='markers+lines', name=f'NM (Regular)'),
         go.Scatter(x=N_values, y=residual_error_nm_l0_first_order, mode='markers+lines', name=f'NM (First Order)'),
-        go.Scatter(x=N_values, y=residual_error_nm_l0, mode='markers+lines', name=f'NM (Regular)')
+        go.Scatter(x=N_values, y=residual_error_nm_l0_second_order, mode='markers+lines', name=f'NM (Second Order)')
     ])\
                 .update_xaxes(title_text='N', type='log')\
                 .update_yaxes(title_text='Residual Error (a.u.)', type='log', showexponent='all', exponentformat='power')\
@@ -224,8 +224,8 @@ def second_order_task(folder_name: str = 'second_order'):
     (_, q_nm_o2), _ = curve_fit(error_func, N_values, residual_error_nm_l0_second_order)
     with open(path.join('results' ,folder_name, 'convergence_rates.tex'), 'w') as f:
         f.write(r'\begin{tabular}{c c}' + '\n')
-        # f.write(r'\hline' + '\n')
         f.write(r'Method & $q$ \\' + '\n')
+        f.write(r'\hline' + '\n')
         f.write(f'שיטת נומרוב & ${q_nm:.6g}$ \\\\' + '\n')
         f.write(f'שיטת נומרוב (סדר ראשון) & ${q_nm_o1:.6g}$ \\\\' + '\n')
         f.write(f'שיטת נומרוב (סדר שני) & ${q_nm_o2:.6g}$ \\\\' + '\n')
