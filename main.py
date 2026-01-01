@@ -229,6 +229,7 @@ def second_order_task(folder_name: str = 'second_order'):
         f.write(f'שיטת נומרוב & ${q_nm:.6g}$ \\\\' + '\n')
         f.write(f'שיטת נומרוב (סדר ראשון) & ${q_nm_o1:.6g}$ \\\\' + '\n')
         f.write(f'שיטת נומרוב (סדר שני) & ${q_nm_o2:.6g}$ \\\\' + '\n')
+        f.write(r'\end{tabular}' + '\n')
 
 
 
