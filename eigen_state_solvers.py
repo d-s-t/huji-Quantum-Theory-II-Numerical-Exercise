@@ -80,7 +80,7 @@ def numerov_method_radial(l: int, V: Callable[[np.ndarray], np.ndarray], r: np.n
 
     if eigvals_only:
         evals = eig(H, N, right=False)
-        return evals.real
+        return np.sort(evals.real)
 
     evals, evecs = eig(H, N)
     # sort eigenvalues (eig does not guarantee order) and take real part
@@ -119,11 +119,11 @@ def numerov_method_l0_firstorder(Z: int, R: float, K: int, *, eigvals_only: bool
     H_main_diag = 1/(dr**2) + W * 5 / 6
     H_off_diag = -1 / (2 * dr**2) + W/12
     H = np.diag(H_main_diag) + np.diag(H_off_diag[1:], 1) + np.diag(H_off_diag[:-1], -1)
-    H[0,0] += Z / (6*dr)
+    H[0,0] += Z / (12*dr)
 
     if eigvals_only:
         evals = eig(H, N, right=False)
-        return evals.real
+        return np.sort(evals.real)
 
     evals, evecs = eig(H, N)
     # sort eigenvalues (eig does not guarantee order) and take real part
