@@ -1,4 +1,4 @@
-from eigen_state_solvers import finite_difference_method_radial, numerov_method_radial, numerov_method_l0_firstorder
+from eigen_state_solvers import finite_difference_method_radial, numerov_method_radial, numerov_method_coulomb_l0_1st_order
 from utils import plotly_export
 import numpy as np
 from plotly import graph_objects as go
@@ -155,7 +155,7 @@ def first_order_task(folder_name: str = 'first_order'):
     
     for i, N in enumerate(N_values):
         r = np.linspace(0, R, N + 1)[1:]
-        evals_nm = numerov_method_l0_firstorder(Z, R, N, eigvals_only=True)
+        evals_nm = numerov_method_coulomb_l0_1st_order(Z, R, N, eigvals_only=True)
         ground_state_energies_nm_l0_first_order[i] = evals_nm[0]
         evals_nm_regular = numerov_method_radial(0, V, r, eigvals_only=True)
         ground_state_energies_nm_l0_regular[i] = evals_nm_regular[0]
