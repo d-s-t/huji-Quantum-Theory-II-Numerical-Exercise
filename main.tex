@@ -32,6 +32,9 @@
   \renewcommand{\equationautorefname}{משוואה}%
 }
 
+\crefname{table}{טבלה}{טבלאות}
+\Crefname{table}{טבלה}{טבלאות}
+
 
 
 \setlength{\parindent}{0pt}
@@ -103,15 +106,15 @@ $$V=-\frac{1}{r}$$
     \hfill
     \begin{minipage}[t]{0.25\textwidth}
         \centering
-        \vspace{-100pt} 
+        \vspace{-100pt}
         \input{results/hydrogen_atom/convergence_rates}
-        \captionof{table}{ערכי q עבור ההתכנסות}
-        \label{tab:hydrogen_atom_convergence_rates}
+        \captionof{table}{ערכי q עבור ההתכנסות\label{tab:hydrogen_atom_convergence_rates}}
     \end{minipage}
 \end{figure}
+
 \par
 ניתן לראות שההתכנסות בשיטת הפרשים סופיים היא יחסית עקבית עבור כל ערך של $l$, ואין שינוי ניכר לעומת הפוטנציאל של האוסילאטור ההרמוני.
-עם זאת, בשיטת נומרוב ניתן לראות שינוי משמעותי - עבור האוסילטור קיבלנו $q\approx 4$ ועם זאת עכשיו עם $l=0$ קיבלנו $q\approx 1.6$, גרוע יותר מיטת הפרשים סופיים! כאשר מסתכלים ב\autoref{tab:hydrogen_atom_convergence_rates} על ערכי $l$ גדולים יותר נראה כאילו יש שיפור במצב, אך מהסתכלות של \autoref{fig:hydrogen_atom_residual_error} ניתן להבין שאין שם שיפור עקבי.
+עם זאת, בשיטת נומרוב ניתן לראות שינוי משמעותי - עבור האוסילטור קיבלנו $q\approx 4$ ועם זאת עכשיו עם $l=0$ קיבלנו $q\approx 1.6$, גרוע יותר מיטת הפרשים סופיים! כאשר מסתכלים ב\cref{tab:hydrogen_atom_convergence_rates} על ערכי $l$ גדולים יותר נראה כאילו יש שיפור במצב, אך מהסתכלות של \autoref{fig:hydrogen_atom_residual_error} ניתן להבין שאין שם שיפור עקבי.
 החלקים הבאים יעסקו בתיקונים לשיטת נומרוב.
 
 \subsection{תיקון מסדר ראשון}
@@ -138,21 +141,10 @@ $$u''_0=-\frac{2Z}{\Delta}u_1$$
 $$u''_0=u_1\frac{2\alpha}{\Delta}$$
 אני לא הבנתי את המעבר מ־$u''$ ל־$H^{(1)}$ אבל היה רשום שם
 $$H^{(1)}_{11}=H_{11}-\frac{1}{12}\frac{\alpha}{\Delta}$$
-ניסיתי גם $\alpha=Z$ (מתוך זה שהיה רשום $W\rightarrow-\alpha/r$) וגם $\alpha=-Z$ ולא ראיתי שיפור. בכלל לעומת שיטת נומרוב ללא התיקון.
+ניסיתי גם $\alpha=Z$ (מתוך זה שהיה רשום $W\rightarrow-\alpha/r$) וגם $\alpha=-Z$ 
+נראה שלקחת $\alpha=Z$ מכוון אותנו לכיוון הנכון, אז אני מניח שזו הייתה הכוונה.
 
-% \begin{figure}[h!]
-%     \centering
-%     \includegraphics[width=0.5\linewidth]{plots/first_order/residual_error.eps}
-%     \caption{השגיאה השיורית עבור תיקון מסדר ראשון}
-%     \label{fig:first_oreder_residual_error}
-% \end{figure}
-% \begin{table}[h!]
-%     \centering
-%         \centering
-%         \input{results/first_order/ground_state_energies}
-%         \caption{אנרגיית היסוד עבור ערכי K שונים בשיטת נומרוב עם תיקון מסדר ראשון.}
-%         \label{tab:first_order_ground_energy}
-% \end{table}
+
 \begin{figure}[h!]
     % \centering
     \begin{minipage}[t]{0.45\textwidth}
@@ -170,7 +162,7 @@ $$H^{(1)}_{11}=H_{11}-\frac{1}{12}\frac{\alpha}{\Delta}$$
         \label{tab:first_order_ground_energy}
     \end{minipage}%
 \end{figure}
-ב\autoref{fig:first_oreder_residual_error} וב\autoref{tab:first_order_ground_energy} ניתן לראות אם התוצאות עבור $\alpha=-Z$. 
+ב\autoref{fig:first_oreder_residual_error} וב\cref{tab:first_order_ground_energy} ניתן לראות אם התוצאות עבור $\alpha=-Z$. 
 בנוסף מתקיים כי הקבוע ממהתאמה הוא \input{results/first_order/q_nm}
 
 \include{harmonic_oscillator_figures}
