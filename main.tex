@@ -169,5 +169,27 @@ $$H^{(1)}_{11}=H_{11}-\frac{1}{12}\frac{\alpha}{\Delta}$$
 $$u_1=u_0'\Delta + \frac{u''_0}{2}\Delta^2 + O(\Delta^3) = - \frac{u''_0\Delta}{2Z} + \frac{u''_0}{2}\Delta^2 = u''_0\left(\frac{Z\Delta^2-\Delta}{2Z}\right)$$
 כלומר 
 $$u''_0=\frac{2Z}{Z\Delta^2-\Delta}u_1\quad\Rightarrow\quad H^{(2)}_{11} = H_{11} + \frac{1}{12}\frac{Z}{Z\Delta^2-\Delta} $$
+נשאר רק להסתכל על התוצאות. 
+\begin{figure}[h!]
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \begin{tabular}{c c c}
+            ללא תיקון & תיקון מסדר ראשון & תיקון מסדר שני \\
+            \hline
+            \input{results/first_order/q_nm} & \input{results/first_order/q_nm_o1} & \input{results/second_order/q_nm_o2} \\
+        \end{tabular}
+        \captionof{table}{.}
+        \label{tab:second_order_ground_energy}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{plots/second_order/residual_error.eps}
+        \caption{השגיאה השיורית עבור תיקון מסדר שני}
+        \label{fig:second_order_residual_error}
+    \end{minipage}%
+\end{figure}
+
+
 \include{harmonic_oscillator_figures}
 \end{document}
