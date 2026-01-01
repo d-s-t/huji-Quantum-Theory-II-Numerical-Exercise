@@ -97,7 +97,7 @@ $$V=-\frac{1}{r}$$
         \label{tab:hydrogen_atom_results}
 \end{table}
 \begin{figure}[h!]
-    \begin{minipage}[t]{0.65\textwidth}
+    \begin{minipage}[t]{0.55\textwidth}
         \centering
         \includegraphics[width=\linewidth, trim=0 0 0 1cm, clip]{plots/hydrogen_atom/residual_error.eps}
         \caption{השגיאה השיורית ברמת היסוד (לעומת $\epsilon=-\frac{1}{2n^2}=-\frac{1}{2(l+1)^2}$)}
@@ -106,7 +106,7 @@ $$V=-\frac{1}{r}$$
     \hfill
     \begin{minipage}[t]{0.25\textwidth}
         \centering
-        \vspace{-100pt}
+        \vspace{-50pt}
         \input{results/hydrogen_atom/convergence_rates}
         \captionof{table}{ערכי q עבור ההתכנסות\label{tab:hydrogen_atom_convergence_rates}}
     \end{minipage}
@@ -120,9 +120,7 @@ $$V=-\frac{1}{r}$$
 \subsection{תיקון מסדר ראשון}
 נפתח את התיקון מסדר ראשן מצורה מפרושת כדי שיהיה לי יותר קל לעקוב...\\
 משוואה (4) היא 
-$$-\frac{u''(r)}{2}+W(r)u(r)=\epsilon u(r)$$
-כאשר
-$$W(r)=V(r)-\frac{l(l+1)}{2r^2}$$
+$$-\frac{u''(r)}{2}+W(r)u(r)=\epsilon u(r) \ ;\quad W(r)=V(r)-\frac{l(l+1)}{2r^2}$$
 בסעיף זה $l=0,\ Z=1,\ V=-\frac{Z}{r}$ ולכן משוואה (4) מקבלת את הצורה
 $$-\frac{u''(r)}{2}-\frac{Z}{r}u(r)=\epsilon u(r)$$
 עבור $r$ קטן נפתח את $u(r)$ בטור טיילור, ונזכור שתנאי השפה מגדיר $u(0)=u_0=0$ ולכן
@@ -132,22 +130,22 @@ $$u''(r)=u''_0+u^{(3)}_0r + O(r^2)$$
 כאשר נציב את זה במשוואה (4) נקבל
 $$-\frac{1}{2}\left(u''_0+u^{(3)}_0r + O(r^2)\right)-\frac{Z}{r}\left(u'_0r+\frac{u''_0}{2}r^2 + O(r^3)\right)=\epsilon \left(u'_0r + O(r^2)\right)$$
 השוויון חייב להיות נכון עבור המקדמים של כל חזקה של $r$ באופן בלתי תלוי, ולכן, כאשר מסתכלים על המקדמים של $r^0$, מקבלים את השוויון 
-$$u_0'=-\frac{u''_0}{2Z}$$
+$u_0'=-\frac{u''_0}{2Z}$.
 מצד שני, כאשר מציבים $r=\Delta$ מקבלים את השוויון
 $$u(\Delta)=u_1=u_0'\Delta+O(\Delta^2) = - \frac{u''_0\Delta}{2Z}$$
 כלומר
-$$u''_0=-\frac{2Z}{\Delta}u_1$$
-במסמך של התרגיל היה רשום שהקשר הוא 
-$$u''_0=u_1\frac{2\alpha}{\Delta}$$
-אני לא הבנתי את המעבר מ־$u''$ ל־$H^{(1)}$ אבל היה רשום שם
-$$H^{(1)}_{11}=H_{11}-\frac{1}{12}\frac{\alpha}{\Delta}$$
-ניסיתי גם $\alpha=Z$ (מתוך זה שהיה רשום $W\rightarrow-\alpha/r$) וגם $\alpha=-Z$ 
-נראה שלקחת $\alpha=Z$ מכוון אותנו לכיוון הנכון, אז אני מניח שזו הייתה הכוונה.
+$$u''_0=-\frac{2Z}{\Delta}u_1 \quad\Rightarrow\quad H^{(1)}_{11}=H_{11}-\frac{1}{12}\frac{Z}{\Delta}$$
+% במסמך של התרגיל היה רשום שהקשר הוא 
+% $$u''_0=u_1\frac{2\alpha}{\Delta}$$
+% אני לא הבנתי את המעבר מ־$u''$ ל־$H^{(1)}$ אבל היה רשום שם
+% $$H^{(1)}_{11}=H_{11}-\frac{1}{12}\frac{\alpha}{\Delta}$$
+% ניסיתי גם $\alpha=Z$ (מתוך זה שהיה רשום $W\rightarrow-\alpha/r$) וגם $\alpha=-Z$ 
+% נראה שלקחת $\alpha=Z$ מכוון אותנו לכיוון הנכון, אז אני מניח שזו הייתה הכוונה.
 
 
 \begin{figure}[h!]
     % \centering
-    \begin{minipage}[t]{0.45\textwidth}
+    \begin{minipage}[t]{0.4\textwidth}
         \centering
         \includegraphics[width=\linewidth]{plots/first_order/residual_error.eps}
         \caption{השגיאה השיורית עבור תיקון מסדר ראשון}
@@ -164,26 +162,29 @@ $$H^{(1)}_{11}=H_{11}-\frac{1}{12}\frac{\alpha}{\Delta}$$
 \end{figure}
 קבוע ההתכנסות ממהתאמה הוא \input{results/first_order/q_nm_o1} לעומת \input{results/first_order/q_nm} ללא התיקון, כלומר יש שיפור משמעותי בקצב ההתכנסות.
 
+% \newpage
+
 \subsection{תיקון מסדר שני}
 נחזור לפיתוח. נסתכל על $u_1=u(\Delta)$ בסדר גבוה יותר
 $$u_1=u_0'\Delta + \frac{u''_0}{2}\Delta^2 + O(\Delta^3) = - \frac{u''_0\Delta}{2Z} + \frac{u''_0}{2}\Delta^2 = u''_0\left(\frac{Z\Delta^2-\Delta}{2Z}\right)$$
 כלומר 
 $$u''_0=\frac{2Z}{Z\Delta^2-\Delta}u_1\quad\Rightarrow\quad H^{(2)}_{11} = H_{11} + \frac{1}{12}\frac{Z}{Z\Delta^2-\Delta} $$
-נשאר רק להסתכל על התוצאות. 
+נשאר רק להסתכל על התוצאות. התיקון מסדר שני עובד בצורה טובה, אפילו טובה יותר ממה שציפיתי.
 \begin{figure}[h!]
     \begin{minipage}[t]{0.45\textwidth}
         \centering
-        \input{results/second_order/convergence_rates}
-        \captionof{table}{.}
-        \label{tab:second_order_convergence_rates}
+        \includegraphics[width=\linewidth]{plots/second_order/residual_error.eps}
+        \caption{השגיאה השיורית השוואה בין המצב ללא תיקון, תיקון מסדר ראשון ותיקון מסדר שני תיקון מסדר שני}
+        \label{fig:second_order_residual_error}
     \end{minipage}
     \hfill
     \begin{minipage}[t]{0.45\textwidth}
+        \vspace{-2cm}
         \centering
-        \includegraphics[width=\linewidth]{plots/second_order/residual_error.eps}
-        \caption{השגיאה השיורית עבור תיקון מסדר שני}
-        \label{fig:second_order_residual_error}
-    \end{minipage}%
+        \input{results/second_order/convergence_rates}
+        \captionof{table}{קצב ההתכנסות עבור רמות התיקון השונות}
+        \label{tab:second_order_convergence_rates}
+    \end{minipage}
 \end{figure}
 
 
