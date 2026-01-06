@@ -264,6 +264,28 @@ def second_order_l1_task(folder_name: str = 'second_order_l1'):
         f.write(f'תיקון מסדר שני & ${q_nm_o2:.6g}$ \\\\' + '\n')
         f.write(r'\end{tabular}' + '\n')
     
+def r_dependence_task():
+    """
+    Here we'll use numerov_method_coulomb_l0_2nd_order with N=480 and vary R from 1 to 100
+    for the 5 lowest energy levels (n=1 to 5), plot the residual error as a function of R. log scale for y-axis.
+    put all 5 levels in the same plot with legend.
+    """
+    N = 480
+    R_values = np.linspace(1, 100, 30)  # from 10^0 to 10^2
+    Z = 1
+    n_levels = 5
+    n = np.arange(1, n_levels + 1)
+    exact_energies = -0.5 * Z**2 / n**2
+    residual_errors = np.empty((n_levels, len(R_values)), dtype=float)
+    for i, R in enumerate(R_values):
+        evals = numerov_method_coulomb_l0_2nd_order(Z, R, N, eigvals_only=True)
+        residual_errors[:, i] = np.abs(evals[:n_levels] - exact_energies)
+    
+    residual_error_fig = go.Figure([go.Scatter(x=R_values, y=residual_errors[i], mode='markers+lines', name=f'n={i+1}') for i in range(n_levels)])\
+                .update_xaxes(title_text='R', type='linear')\
+                .update_yaxes(title_text='Residual Error (a.u.)', type='log', showexponent='all', exponentformat='power')\
+                .update_layout(legend=dict(title='Energy Level n'))
+    plotly_export(residual_error_fig, path.join('r_dependence', 'residual_error'))
 
 
 if __name__ == '__main__':
@@ -272,3 +294,4 @@ if __name__ == '__main__':
     first_order_task()
     second_order_task()
     second_order_l1_task()
+    r_dependence_task()
