@@ -1,0 +1,30 @@
+\subsection{אנרגיות רמת היסוד והשגיאה השיורית באטום המימן}
+עבור אטום המימן $Z=1$ כלומר הפוטנציאל הוא
+$$V=-\frac{1}{r}$$
+\begin{table}[h!]
+    \centering
+        \centering
+        \input{results/hydrogen_atom/ground_state_energies}
+        \caption{אנרגיית היסוד עבור ערכי K שונים, בשתי השיטות - הפרשים סופיים ונומרוב.}
+        \label{tab:hydrogen_atom_results}
+\end{table}
+\begin{figure}[h!]
+    \begin{minipage}[t]{0.55\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, trim=0 0 0 1cm, clip]{plots/hydrogen_atom/residual_error.eps}
+        \caption{השגיאה השיורית ברמת היסוד (לעומת $\epsilon=-\frac{1}{2n^2}=-\frac{1}{2(l+1)^2}$)}
+        \label{fig:hydrogen_atom_residual_error}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.25\textwidth}
+        \centering
+        \vspace{-50pt}
+        \input{results/hydrogen_atom/convergence_rates}
+        \captionof{table}{ערכי q עבור ההתכנסות\label{tab:hydrogen_atom_convergence_rates}}
+    \end{minipage}
+\end{figure}
+
+\par
+ניתן לראות שההתכנסות בשיטת הפרשים סופיים היא יחסית עקבית עבור כל ערך של $l$, ואין שינוי ניכר לעומת הפוטנציאל של האוסילאטור ההרמוני.
+עם זאת, בשיטת נומרוב ניתן לראות שינוי משמעותי - עבור האוסילטור קיבלנו $q\approx 4$ ועם זאת עכשיו עם $l=0$ קיבלנו $q\approx 1.6$, גרוע יותר מיטת הפרשים סופיים! כאשר מסתכלים ב\cref{tab:hydrogen_atom_convergence_rates} על ערכי $l$ גדולים יותר נראה כאילו יש שיפור במצב, אך מהסתכלות של \autoref{fig:hydrogen_atom_residual_error} ניתן להבין שאין שם שיפור עקבי.
+החלקים הבאים יעסקו בתיקונים לשיטת נומרוב.
