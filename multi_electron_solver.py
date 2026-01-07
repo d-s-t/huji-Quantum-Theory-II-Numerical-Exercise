@@ -38,6 +38,7 @@ class NLMS_State:
 class NLMS_States:
     evals: list[np.ndarray]
     evecs: list[np.ndarray]
+    Z: int
 
     def __getitem__(self, state: tuple[int, int, int, int]) -> np.ndarray:
         n, l, _, _ = state
@@ -51,10 +52,10 @@ class NLMS_States:
     
     # implement state in nlms_states
     def __iter__(self):
-        return iter(get_states(len(self)))
+        return iter(get_states(self.Z))
     
     def __len__(self):
-        return len(self.evals[0])
+        return len(self.Z)
 
 
 
@@ -84,7 +85,7 @@ def get_lower_energy_states(Z: int, R: float, K: int, Vee: Callable[[np.ndarray]
     evals1, evecs1 = l1_solver(Z, R, K, V)
     all_evals = [evals0, evals1]
     all_evecs = [evecs0, evecs1]
-    return NLMS_States(all_evals, all_evecs)
+    return NLMS_States(all_evals, all_evecs, Z=Z)
 
 def get_electron_density(states: NLMS_States, r: np.ndarray, Z: int) -> np.ndarray:
     """
@@ -126,7 +127,7 @@ def get_electron_electron_potential(prev_Vee: np.ndarray, rho: np.ndarray, r: np
     numerator = rho * r**2
     denominator = np.abs(r[:, None] - r[None, :])
     integrand = numerator / denominator
-    integrand[np.eye(K)] = 0 
+    integrand[np.eye(K)==1] = 0 
     Vee_new = 4 * np.pi * np.trapezoid(integrand, r, axis=1)
 
     return 0.5 * (prev_Vee + Vee_new)

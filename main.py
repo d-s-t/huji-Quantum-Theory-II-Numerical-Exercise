@@ -333,11 +333,11 @@ def He_task(folder_name: str = 'helium_atom'):
         f.write(r'State & Energy (a.u.) \\' + '\n')
         f.write(r'\hline' + '\n')
         for state in final_states:
-            energy = final_states.energy[state]
+            energy = final_states.energy(state)
             f.write(f'${state}$ & ${energy:.6g}$ \\\\' + '\n')
         f.write(r'\end{tabular}' + '\n')
     
-    total_energy = sum(final_states.energy[state] for state in final_states)
+    total_energy = sum(final_states.energy(state) for state in final_states)
     with open(path.join('results', folder_name, 'total_energy.tex'), 'w') as f:
         f.write(f'{total_energy:.6g}')
         
