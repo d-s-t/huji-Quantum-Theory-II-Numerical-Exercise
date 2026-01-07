@@ -4,6 +4,7 @@ import numpy as np
 from plotly import graph_objects as go
 from scipy.optimize import curve_fit
 from os import path, makedirs
+from multi_electron_solver import solve_multi_electron_atom
 
 def error_func(N, C, q):
     return C * N**(-q)
@@ -285,8 +286,46 @@ def r_dependence_task(folder_name: str = 'r_dependence'):
                 .update_xaxes(title_text='R', type='linear')\
                 .update_yaxes(title_text='Residual Error (a.u.)', type='log', showexponent='all', exponentformat='power')\
                 .update_layout(legend=dict(title='Energy Level n'))
-    plotly_export(residual_error_fig, path.join('r_dependence', 'residual_error'))
+    plotly_export(residual_error_fig, path.join(folder_name, 'residual_error'))
 
+def He_task(folder_name: str = 'helium_atom'):
+    """
+    use solve_multi_electron_atom to solve for helium atom (Z=2)
+
+    Executes the routine for the Helium atom and generates analysis plots 
+    based on specific parameters.
+
+    Parameters
+    ----------
+    The function should utilize the following hardcoded parameters:
+    - K : int
+        Grid points or iterations, set to 500.
+    - R : float
+        Maximum radius (boundary), set to 20.
+
+    Operations & Plots
+    ------------------
+    1. Simulation Execution:
+        Run the simulation for the Helium atom using the parameters above.
+
+    2. Electron Density Plot:
+        Plot the electron density as a function of radius in the range r in [0, 10].
+        This graph must display the curves for different iterations on the same axes.
+
+    3. Electronic Potential Plot:
+        Plot the electronic potential (V_ee) as a function of radius in the range r in [0, 10].
+        This graph must display the curves for different iterations on the same axes.
+
+    4. Effective Charge Plot:
+        Plot the "Effective Charge" defined as Z_eff(r) = -Z + r * V_ee(r).
+        - Domain: r in [0, 10].
+        - Condition: Use the data from the converged calculation.
+        - Note: Provide an explanation of the resulting graph.
+
+    5. Energy Output:
+        Calculate and print/record the converged energy values for the electrons.
+    """
+    pass
 
 if __name__ == '__main__':
     harmonic_oscillator_task()
