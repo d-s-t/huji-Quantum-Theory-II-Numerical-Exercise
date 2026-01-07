@@ -112,7 +112,7 @@ def get_electron_density(states: NLMS_States, r: np.ndarray, Z: int) -> np.ndarr
 def get_electron_electron_potential(prev_Vee: np.ndarray, rho: np.ndarray, r: np.ndarray) -> np.ndarray:
     """
     Compute the electron-electron interaction potential Vee(r) from the given eigenstates.
-    V_{ee}^{(n+1)} = \\frac{1}{2} \\left[ V_{ee}^{(n)} + \int d\\boldsymbol{r}' \\frac{\\rho_{e}^{(n)}(r')}{|\\boldsymbol{r}' - \\boldsymbol{r}|} \\right]
+    V_{ee}^{(n+1)} = \\frac{1}{2} \\left[ V_{ee}^{(n)} + \\int d\\boldsymbol{r}' \\frac{\\rho_{e}^{(n)}(r')}{|\\boldsymbol{r}' - \\boldsymbol{r}|} \\right]
 
     :param rho: Electron density of shape (K,)
     :type rho: ndarray
