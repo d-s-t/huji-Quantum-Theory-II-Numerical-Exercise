@@ -17,6 +17,17 @@
 \usepackage{cleveref} % Must be loaded AFTER hyperref
 
 \usepackage{polyglossia}
+\usepackage{listings}
+\usepackage{minted}
+
+\lstset{
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=5pt,
+  basicstyle=\ttfamily\small,
+  breaklines=true
+}
+
 
 \setmainlanguage{hebrew}
 \setotherlanguage{english}
@@ -49,9 +60,7 @@
 \input{1_harmonic_oscillator/0_all}
 
 \input{2_electric_interaction/0_all}
-
-\section{check}
-\subsection{checksub}
-
+\appendix
 \include{harmonic_oscillator_figures}
+\input{python_appendix}
 \end{document}
