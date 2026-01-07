@@ -24,4 +24,3 @@ def coulomb_potential(Z: int) -> Callable[[np.ndarray], np.ndarray]:
     return lambda r: -Z / r
 
 hydrogen_atom_potential = coulomb_potential(1)
-helium_atom_potential = coulomb_potential(2)
