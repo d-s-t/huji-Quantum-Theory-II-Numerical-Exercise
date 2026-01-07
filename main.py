@@ -4,7 +4,7 @@ import numpy as np
 from plotly import graph_objects as go
 from scipy.optimize import curve_fit
 from os import path, makedirs
-from multi_electron_solver import solve_multi_electron_atom
+from multi_electron_solver import solve_multi_electron_atom, get_states
 
 def error_func(N, C, q):
     return C * N**(-q)
@@ -138,7 +138,6 @@ def hydrogen_atom_task(folder_name: str = 'hydrogen_atom'):
             f.write(f'{l} & ${q_values_fd[i]:.6g}$ & ${q_values_nm[i]:.6g}$' + r' \\' + '\n')
             # f.write(r'\hline' + '\n')
         f.write(r'\end{tabular}' + '\n')
-
 
 def first_order_task(folder_name: str = 'first_order'):
     """
@@ -325,7 +324,60 @@ def He_task(folder_name: str = 'helium_atom'):
     5. Energy Output:
         Calculate and print/record the converged energy values for the electrons.
     """
-    pass
+    makedirs(path.join('results', folder_name), exist_ok=True)
+
+    K = 500
+    R_max = 20
+    Z = 2
+    r = np.linspace(0, R_max, K + 1)[1:]
+
+    iteration_data = solve_multi_electron_atom(Z, R_max, K)
+
+    # write the number of iterations to a latex file
+    with open(path.join('results', folder_name, 'num_iterations.tex'), 'w') as f:
+        f.write(f'{len(iteration_data)}')
+
+    # 2. Electron Density Plot:
+    num_iterations_to_plot = min(10, len(iteration_data))
+    indices_to_plot = np.linspace(0, len(iteration_data) - 1, num_iterations_to_plot, dtype=int)
+    fig_rho = go.Figure([go.Scatter(x=r, y=iteration_data[i].rho, mode='lines', name=f'Iteration {i}') for i in indices_to_plot])\
+                .update_xaxes(title_text='r (a.u.)', range=[0, 10])\
+                .update_yaxes(title_text='Electron Density ρ(r) (a.u.)')\
+                .update_layout(title='Electron Density for Helium Atom')
+    plotly_export(fig_rho, path.join(folder_name, 'electron_density'))
+
+    # 3. Electronic Potential Plot:
+    fig_vee = go.Figure([go.Scatter(x=r, y=iteration_data[i].Vee, mode='lines', name=f'Iteration {i}') for i in indices_to_plot])\
+                .update_xaxes(title_text='r (a.u.)', range=[0, 10])\
+                .update_yaxes(title_text='Electron-Electron Potential V_ee(r) (a.u.)')\
+                .update_layout(title='Electron-Electron Potential for Helium Atom')
+    plotly_export(fig_vee, path.join(folder_name, 'electron_electron_potential'))
+
+    # 4. Effective Charge Plot:
+    converged_data = iteration_data[-1]
+    Z_eff = -Z + r * converged_data.Vee
+    fig_zeff = go.Figure([go.Scatter(x=r, y=Z_eff, mode='lines', name='Converged Z_eff')])\
+                 .update_xaxes(title_text='r (a.u.)', range=[0, 10])\
+                 .update_yaxes(title_text='Effective Charge Z_eff(r) (a.u.)')\
+                 .update_layout(title='Effective Charge for Helium Atom')
+    plotly_export(fig_zeff, path.join(folder_name, 'effective_charge'))
+
+    # 5. Energy Output:
+    final_states = converged_data.states
+    with open(path.join('results', folder_name, 'converged_energies.tex'), 'w') as f:
+        f.write(r'\begin{tabular}{c c}' + '\n')
+        f.write(r'State & Energy (a.u.) \\' + '\n')
+        f.write(r'\hline' + '\n')
+        for state in final_states:
+            energy = final_states.energy[state]
+            f.write(f'${state}$ & ${energy:.6g}$ \\\\' + '\n')
+        f.write(r'\end{tabular}' + '\n')
+    
+    total_energy = sum(final_states.energy[state] for state in final_states)
+    with open(path.join('results', folder_name, 'total_energy.tex'), 'w') as f:
+        f.write(f'{total_energy:.6g}')
+        
+    
 
 if __name__ == '__main__':
     harmonic_oscillator_task()

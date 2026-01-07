@@ -21,6 +21,20 @@ def get_states(Z: int) -> np.ndarray:
                      ], dtype=int)[:Z]
 
 @dataclass
+class NLMS_State:
+    n: int
+    l: int
+    m: int
+    s: int
+
+    # define unpack method
+    def __iter__(self):
+        return iter((self.n, self.l, self.m, self.s))
+    
+    def __str__(self):
+        return r"$|{n=}, {l=}, {m=}, \sigma={s}\rangle$".format(n=self.n, l=self.l, m=self.m, s=self.s)
+
+@dataclass
 class NLMS_States:
     evals: list[np.ndarray]
     evecs: list[np.ndarray]
@@ -30,10 +44,18 @@ class NLMS_States:
         idx = n + l - 1
         return self.evecs[l][:, idx]
     
-    def get_eigenvalue(self, state: tuple[int, int, int, int]) -> float:
+    def energy(self, state: tuple[int, int, int, int]) -> float:
         n, l, _, _ = state
         idx = n + l - 1
         return self.evals[l][idx]
+    
+    # implement state in nlms_states
+    def __iter__(self):
+        return iter(get_states(len(self)))
+    
+    def __len__(self):
+        return len(self.evals[0])
+
 
 
 def get_lower_energy_states(Z: int, R: float, K: int, Vee: Callable[[np.ndarray], np.ndarray]) -> NLMS_States:
