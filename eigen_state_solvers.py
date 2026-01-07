@@ -136,7 +136,7 @@ def numerov_method_coulomb_l0_1st_order(Z: int, R: float, K: int, *, eigvals_onl
     return evals.real, normalized_evecs
 
 
-def numerov_method_coulomb_l0_2nd_order(Z: int, R: float, K: int, *, eigvals_only: bool = False) -> Union[np.ndarray, tuple[np.ndarray, np.ndarray]]:
+def numerov_method_coulomb_l0_2nd_order(Z: int, R: float, K: int, V: Callable[[np.ndarray], np.ndarray] =None, *, eigvals_only: bool = False) -> Union[np.ndarray, tuple[np.ndarray, np.ndarray]]:
     """
     Numerov method specialized for l=0 radial equation using second-order boundary condition at r=0.
 
@@ -150,7 +150,7 @@ def numerov_method_coulomb_l0_2nd_order(Z: int, R: float, K: int, *, eigvals_onl
         If True, only eigenvalues are returned
     """
     from potential_functions import coulomb_potential
-    V = coulomb_potential(Z)
+    V = V or coulomb_potential(Z)
     dr = R / K
     r = np.linspace(dr, R, K)
 
@@ -178,7 +178,7 @@ def numerov_method_coulomb_l0_2nd_order(Z: int, R: float, K: int, *, eigvals_onl
     normalized_evecs = evecs / np.sqrt(np.trapezoid(evecs * np.conjugate(evecs), r, axis=0))
     return evals.real, normalized_evecs
 
-def numerov_method_coulomb_l1_2nd_order(Z: int, R: float, K: int, *, eigvals_only: bool = False) -> Union[np.ndarray, tuple[np.ndarray, np.ndarray]]:
+def numerov_method_coulomb_l1_2nd_order(Z: int, R: float, K: int, V: Callable[[np.ndarray], np.ndarray] =None, *, eigvals_only: bool = False) -> Union[np.ndarray, tuple[np.ndarray, np.ndarray]]:
     """
     Numerov method specialized for l=1 radial equation using second-order boundary condition at r=0.
 
@@ -192,7 +192,7 @@ def numerov_method_coulomb_l1_2nd_order(Z: int, R: float, K: int, *, eigvals_onl
         If True, only eigenvalues are returned
     """
     from potential_functions import coulomb_potential
-    V = coulomb_potential(Z)
+    V = V or coulomb_potential(Z)
     dr = R / K
     r = np.linspace(dr, R, K)
 

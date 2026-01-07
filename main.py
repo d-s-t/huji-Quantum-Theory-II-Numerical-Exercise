@@ -264,7 +264,7 @@ def second_order_l1_task(folder_name: str = 'second_order_l1'):
         f.write(f'תיקון מסדר שני & ${q_nm_o2:.6g}$ \\\\' + '\n')
         f.write(r'\end{tabular}' + '\n')
     
-def r_dependence_task():
+def r_dependence_task(folder_name: str = 'r_dependence'):
     """
     Here we'll use numerov_method_coulomb_l0_2nd_order with N=480 and vary R from 1 to 100
     for the 5 lowest energy levels (n=1 to 5), plot the residual error as a function of R. log scale for y-axis.
