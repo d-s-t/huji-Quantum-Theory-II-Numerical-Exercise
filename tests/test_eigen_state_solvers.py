@@ -4,7 +4,6 @@ from sys import float_info
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import relative_error
 from eigen_state_solvers import finite_difference_method_radial, numerov_method_radial
 
 class TestEigenStateSolvers(unittest.TestCase):
@@ -23,7 +22,7 @@ class TestEigenStateSolvers(unittest.TestCase):
         self.assertTrue(np.all(np.diff(self.evals_nm) > 0))
 
     def test_relative_error(self):
-        rel_error = relative_error(self.evals_fd, self.evals_nm)
+        rel_error = abs(1-self.evals_fd/self.evals_nm)
         self.assertLess(max(rel_error[:self.K//10]), 1e-2) # Check that the relative error is small
 
     def test_wavefunction_normalization(self):
