@@ -3,6 +3,7 @@ import numpy as np
 from typing import Callable
 from potential_functions import coulomb_potential
 from dataclasses import dataclass
+from tqdm import trange
 
 def get_states(Z: int) -> np.ndarray:
     """
@@ -159,15 +160,16 @@ def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 10
     Vee = np.zeros(K, dtype=np.float64)
     iteration_data = []
 
-    for i in range(max_iterations):
-        states = get_lower_energy_states(Z, R, K, Vee)
-        rho = get_electron_density(states, r, Z)
-        iteration_data.append(IterationData(Vee=Vee.copy(), states=states, rho=rho.copy()))
-        Vee_new = get_electron_electron_potential(Vee, rho, r)
-
-        if np.linalg.norm(Vee_new - Vee) < tol:
-            break
-
-        Vee = Vee_new
+    with trange(max_iterations) as pbar:
+        for _ in pbar:
+            states = get_lower_energy_states(Z, R, K, Vee)
+            rho = get_electron_density(states, r, Z)
+            iteration_data.append(IterationData(Vee=Vee.copy(), states=states, rho=rho.copy()))
+            Vee_new = get_electron_electron_potential(Vee, rho, r)
+            dV = np.linalg.norm(Vee_new - Vee)
+            pbar.set_postfix({'ΔVee': f"{dV:.2e}", 'tol': f"{tol:.2e}"})
+            if dV < tol:
+                break
+            Vee = Vee_new
 
     return iteration_data
