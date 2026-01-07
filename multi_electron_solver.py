@@ -1,7 +1,8 @@
 from eigen_state_solvers import numerov_method_coulomb_l0_2nd_order as l0_solver, numerov_method_coulomb_l1_2nd_order as l1_solver
 import numpy as np
-from typing import Callable, Union
+from typing import Callable
 from potential_functions import coulomb_potential
+from dataclasses import dataclass
 
 def get_states(Z: int) -> np.ndarray:
     """
@@ -19,10 +20,10 @@ def get_states(Z: int) -> np.ndarray:
                      for s in [-1, 1]
                      ], dtype=int)[:Z]
 
+@dataclass
 class NLMS_States:
-    def __init__(self, evals: list[np.ndarray, np.ndarray], evecs: list[np.ndarray, np.ndarray]):
-        self.evals = evals
-        self.evecs = evecs
+    evals: list[np.ndarray]
+    evecs: list[np.ndarray]
 
     def __getitem__(self, state: tuple[int, int, int, int]) -> np.ndarray:
         n, l, _, _ = state
@@ -108,8 +109,13 @@ def get_electron_electron_potential(prev_Vee: np.ndarray, rho: np.ndarray, r: np
 
     return 0.5 * (prev_Vee + Vee_new)
 
+@dataclass
+class IterationData:
+    Vee: np.ndarray
+    states: NLMS_States
+    rho: np.ndarray
 
-def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 100, tol: float = 1e-6) -> NLMS_States:
+def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 100, tol: float = 1e-6) -> list[IterationData]:
     """
     Solve the multi-electron atom problem using self-consistent field method.
 
@@ -128,10 +134,12 @@ def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 10
     """
     r = np.linspace(0, R, K+1)[1:]
     Vee = np.zeros(K, dtype=np.float64)
+    iteration_data = []
 
-    for _ in range(max_iterations):
+    for i in range(max_iterations):
         states = get_lower_energy_states(Z, R, K, Vee)
         rho = get_electron_density(states, r, Z)
+        iteration_data.append(IterationData(Vee=Vee.copy(), states=states, rho=rho.copy()))
         Vee_new = get_electron_electron_potential(Vee, rho, r)
 
         if np.linalg.norm(Vee_new - Vee) < tol:
@@ -139,4 +147,4 @@ def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 10
 
         Vee = Vee_new
 
-    return states
+    return iteration_data
