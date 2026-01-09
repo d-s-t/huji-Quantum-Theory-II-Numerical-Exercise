@@ -60,7 +60,7 @@ class NLMS_States:
 
 
 
-def get_lower_energy_states(Z: int, R: float, K: int, Vee: Callable[[np.ndarray], np.ndarray]) -> NLMS_States:
+def get_lower_energy_states(Z: int, R: float, K: int, Vee: np.ndarray) -> NLMS_States:
     """
     Get the Z lowest energy states for Z atomic number, with colomb potential and electron-electron interaction Vee.
     if Z<=2, use only l=0 solver, else use l=0 and l=1 solvers to get enough states.
