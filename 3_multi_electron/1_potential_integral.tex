@@ -1,4 +1,4 @@
-\subsection{חישוב הפוטנציאל $V_ee$}
+\subsection{חישוב הפוטנציאל $V_{ee}$}
 הפוטנציאל הנתון בתרגיל מחושב על ידי האינטגרל
 $$
 V_{ee}(r) = \frac{Z-1}{Z}\int d\mathbf{r}' \frac{\rho_(r')}{|\mathbf{r} - \mathbf{r}'|} 
@@ -15,13 +15,14 @@ $$
     I_\Omega 
     &= \int d\Omega' \frac{1}{|\mathbf{r} - \mathbf{r}'|} \\
     &= \int \sin\theta' d\theta' d\phi' \frac{1}{\sqrt{r^2 + r'^2 - 2 r r' \cos\gamma}} \\
-    &\left( u = r^2 + r'^2 - 2rr'\cos\theta' \right)
-    &= \frac{2\pi}{2 r r'} \int_{-2r r'}^{2r r'} \frac{du}{\sqrt{u}} \\
+    &\left( u = r^2 + r'^2 - 2rr'\cos\theta' \right) \\
+    &= \frac{2\pi}{2 r r'} \int_{r^2 + r'^2 -2r r'}^{r^2 + r'^2 +2r r'} \frac{du}{\sqrt{u}} \\
     &= \frac{2\pi}{r r'} \left( \sqrt{r^2 + r'^2 + 2 r r'} - \sqrt{r^2 + r'^2 - 2 r r'} \right) \\
     &= \frac{2\pi}{r r'} \left( r + r' - |r - r'| \right) \\
-    &= \begin{cases}
-        \frac{4\pi}{r}, & r' < r \\
-        \frac{4\pi}{r'}, & r' > r \\
-        0, & r' = r
-    \end{cases}
+    &= \frac{4\pi}{\max(r,r')}\ & r' \neq r \\
 \end{align*}
+
+אז האינטגרל הרדיאלי שנחשב נומרית הוא
+$$
+V_{ee}(r) = 4\pi\frac{Z-1}{Z}\int_0^\infty dr' \frac{r'^2 \rho(r')}{\max(r,r')}
+$$
