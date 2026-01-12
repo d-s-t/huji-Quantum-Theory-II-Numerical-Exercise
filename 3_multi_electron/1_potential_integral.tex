@@ -1,0 +1,27 @@
+\subsection{חישוב הפוטנציאל $V_ee$}
+הפוטנציאל הנתון בתרגיל מחושב על ידי האינטגרל
+$$
+V_{ee}(r) = \frac{Z-1}{Z}\int d\mathbf{r}' \frac{\rho_(r')}{|\mathbf{r} - \mathbf{r}'|} 
+$$
+ניתן לראות שהאינטגרל הזה הוא מרחבי, כאשר החישובים הנומרים שלנו מחשבים רק את החלק הרדיאל. 
+נפריד את האינטגרל לחלק זוויתי וחלק רדיאלי, ונחשב את החלק הזוויתי בצורה אנליטית.
+\begin{align*}
+    V_{ee}(r) 
+    &= \frac{Z-1}{Z}\int d\mathbf{r}' \frac{\rho_(r')}{|\mathbf{r} - \mathbf{r}'|} \\
+    &= \frac{Z-1}{Z}\int_0^\infty dr' r'^2 \rho(r') \int d\Omega' \frac{1}{|\mathbf{r} - \mathbf{r}'|} \\
+\end{align*}
+נחשב רק את האינטגרל הזוויתי, כאשר נשתמש במערכת צירים שבה $\mathbf{r} = r \hat{z}$.
+\begin{align*}
+    I_\Omega 
+    &= \int d\Omega' \frac{1}{|\mathbf{r} - \mathbf{r}'|} \\
+    &= \int \sin\theta' d\theta' d\phi' \frac{1}{\sqrt{r^2 + r'^2 - 2 r r' \cos\gamma}} \\
+    &\left( u = r^2 + r'^2 - 2rr'\cos\theta' \right)
+    &= \frac{2\pi}{2 r r'} \int_{-2r r'}^{2r r'} \frac{du}{\sqrt{u}} \\
+    &= \frac{2\pi}{r r'} \left( \sqrt{r^2 + r'^2 + 2 r r'} - \sqrt{r^2 + r'^2 - 2 r r'} \right) \\
+    &= \frac{2\pi}{r r'} \left( r + r' - |r - r'| \right) \\
+    &= \begin{cases}
+        \frac{4\pi}{r}, & r' < r \\
+        \frac{4\pi}{r'}, & r' > r \\
+        0, & r' = r
+    \end{cases}
+\end{align*}
