@@ -86,7 +86,7 @@ def get_lower_energy_states(Z: int, R: float, K: int, Vee: np.ndarray) -> NLMS_S
     all_evecs = [evecs0, evecs1]
     return NLMS_States(all_evals, all_evecs, Z=Z)
 
-def get_electron_density(states: NLMS_States, r: np.ndarray, Z: int) -> np.ndarray:
+def get_electron_density(states: NLMS_States, r: np.ndarray) -> np.ndarray:
     """
     Compute the electron density ρ(r) from the given eigenstates.
 
@@ -99,10 +99,8 @@ def get_electron_density(states: NLMS_States, r: np.ndarray, Z: int) -> np.ndarr
     :return: Electron density ρ(r) of shape (K,)
     :rtype: ndarray
     """
-    s = get_states(Z)
-    K = r.shape[0]
-    rho = np.zeros(K, dtype=np.float64)
-    for state in s:
+    rho = np.zeros_like(r, dtype=np.float64)
+    for state in states:
         evec = states[state]/r
         rho += np.abs(evec)**2
     return rho
@@ -124,7 +122,7 @@ def get_electron_electron_potential(prev_Vee: np.ndarray, rho: np.ndarray, r: np
     numerator = rho * r**2
     denominator = np.maximum(r[:, None], r[None, :])
     integrand = numerator / denominator
-    Vee_new = 4 * np.pi * (Z-1)/Z * np.trapezoid(integrand, r, axis=1)
+    Vee_new = (Z-1)/Z * np.trapezoid(integrand, r, axis=1) # 4π factor is absorbed in rho.
 
     return 0.5 * (prev_Vee + Vee_new)
 
@@ -155,14 +153,23 @@ def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 10
     Vee = np.zeros(K, dtype=np.float64)
     iteration_data = []
 
-    with trange(max_iterations) as pbar:
-        for _ in pbar:
+
+    with trange(100) as pbar:
+        initial_dV = None   
+        pbar.set_postfix({'ΔVee': None, 'tol': f"{tol:.2e}"})
+        for i in range(max_iterations):
             states = get_lower_energy_states(Z, R, K, Vee)
-            rho = get_electron_density(states, r, Z)
+            rho = get_electron_density(states, r)
             iteration_data.append(IterationData(Vee=Vee.copy(), states=states, rho=rho.copy()))
             Vee_new = get_electron_electron_potential(Vee, rho, r, Z)
             dV = np.linalg.norm(Vee_new - Vee)
+            if initial_dV is None:
+                initial_dV = dV
+            convergence_percent = 100 * (np.log(dV / initial_dV) / np.log(tol / initial_dV)) if initial_dV != 0 else 0
+            iteration_percent = 100 * i // max_iterations
+            pbar.n = min(int(max(convergence_percent, iteration_percent)), 100)
             pbar.set_postfix({'ΔVee': f"{dV:.2e}", 'tol': f"{tol:.2e}"})
+            pbar.refresh()
             if dV < tol:
                 break
             Vee = Vee_new
