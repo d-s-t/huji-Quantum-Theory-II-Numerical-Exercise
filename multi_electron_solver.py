@@ -109,10 +109,10 @@ def get_electron_density(states: NLMS_States, r: np.ndarray, Z: int) -> np.ndarr
 
 
 
-def get_electron_electron_potential(prev_Vee: np.ndarray, rho: np.ndarray, r: np.ndarray) -> np.ndarray:
+def get_electron_electron_potential(prev_Vee: np.ndarray, rho: np.ndarray, r: np.ndarray, Z: int) -> np.ndarray:
     """
     Compute the electron-electron interaction potential Vee(r) from the given eigenstates.
-    V_{ee}^{(n+1)} = \\frac{1}{2} \\left[ V_{ee}^{(n)} + \\int d\\boldsymbol{r}' \\frac{\\rho_{e}^{(n)}(r')}{|\\boldsymbol{r}' - \\boldsymbol{r}|} \\right]
+    V_{ee}(r) = 4\\pi\\frac{Z-1}{Z}\\int_0^\\infty dr' \\frac{r'^2 \\rho(r')}{\\max(r,r')}
 
     :param rho: Electron density of shape (K,)
     :type rho: ndarray
@@ -121,13 +121,10 @@ def get_electron_electron_potential(prev_Vee: np.ndarray, rho: np.ndarray, r: np
     :return: Electron-electron interaction potential Vee(r) of shape (K,)
     :rtype: ndarray
     """
-    K = r.shape[0]
-
     numerator = rho * r**2
-    denominator = np.abs(r[:, None] - r[None, :])
+    denominator = np.maximum(r[:, None], r[None, :])
     integrand = numerator / denominator
-    integrand[np.eye(K)==1] = 0 
-    Vee_new = 4 * np.pi * np.trapezoid(integrand, r, axis=1)
+    Vee_new = 4 * np.pi * (Z-1)/Z * np.trapezoid(integrand, r, axis=1)
 
     return 0.5 * (prev_Vee + Vee_new)
 
@@ -163,7 +160,7 @@ def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 10
             states = get_lower_energy_states(Z, R, K, Vee)
             rho = get_electron_density(states, r, Z)
             iteration_data.append(IterationData(Vee=Vee.copy(), states=states, rho=rho.copy()))
-            Vee_new = get_electron_electron_potential(Vee, rho, r)
+            Vee_new = get_electron_electron_potential(Vee, rho, r, Z)
             dV = np.linalg.norm(Vee_new - Vee)
             pbar.set_postfix({'ΔVee': f"{dV:.2e}", 'tol': f"{tol:.2e}"})
             if dV < tol:
