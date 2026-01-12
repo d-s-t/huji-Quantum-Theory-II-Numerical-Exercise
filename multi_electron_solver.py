@@ -43,21 +43,19 @@ class NLMS_States:
 
     def __getitem__(self, state: tuple[int, int, int, int]) -> np.ndarray:
         n, l, _, _ = state
-        idx = n + l - 1
+        idx = n - l - 1
         return self.evecs[l][:, idx]
     
     def energy(self, state: tuple[int, int, int, int]) -> float:
         n, l, _, _ = state
-        idx = n + l - 1
+        idx = n - l - 1
         return self.evals[l][idx]
     
-    # implement state in nlms_states
     def __iter__(self):
         return iter(get_states(self.Z))
     
     def __len__(self):
-        return len(self.Z)
-
+        return self.Z
 
 
 def get_lower_energy_states(Z: int, R: float, K: int, Vee: np.ndarray) -> NLMS_States:
@@ -72,7 +70,7 @@ def get_lower_energy_states(Z: int, R: float, K: int, Vee: np.ndarray) -> NLMS_S
     :param K: Description
     :type K: int
     :param Vee: Description
-    :type Vee: Callable[[np.ndarray], np.ndarray]
+    :type Vee: np.ndarray
     :return: Description
     :rtype: ndarray
     """
