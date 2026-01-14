@@ -8,6 +8,6 @@ py_files = [f for f in py_files if f != __file__]
 
 # create a latex document listing the files named file_list.tex
 with open("file_list.tex", "w") as f:
-    f.write(r"\newcommand{\filelist}{" + "\n")
-    f.write(",\n".join(py_files) + "\n")
-    f.write("}\n")
+    f.write(r"\newcommand{\filelist}{" + "%\n")
+    f.write(",%\n".join(py_files) + "%\n")
+    f.write("}%\n")
