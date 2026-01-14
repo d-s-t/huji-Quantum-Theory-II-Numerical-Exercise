@@ -301,14 +301,14 @@ def multi_electron_tasks(Z, R_max, K, folder_name):
     # 2. Electron Density Plot:
     num_iterations_to_plot = min(10, len(iteration_data))
     indices_to_plot = np.linspace(0, len(iteration_data) - 1, num_iterations_to_plot, dtype=int)
-    fig_density = go.Figure([go.Scatter(x=r, y=iteration_data[i].electron_density, mode='lines', name=f'Iteration {i}') for i in indices_to_plot])\
+    fig_density = go.Figure([go.Scatter(x=r, y=iteration_data[i].electron_density, mode='lines', name=f'Iter {i}') for i in indices_to_plot])\
                 .update_xaxes(title_text=r'$r$', range=[0, 10])\
-                .update_yaxes(title_text=r'$\lambda_e(r)$', type='log')
+                .update_yaxes(title_text=r'$\lambda_e(r)$')
     plotly_export(fig_density, path.join(folder_name, 'electron_density'))
 
     # 3. Electronic Potential Plot:
     indices_to_plot = np.linspace(1, len(iteration_data) - 1, num_iterations_to_plot, dtype=int)
-    fig_vee = go.Figure([go.Scatter(x=r, y=iteration_data[i].Vee, mode='lines', name=f'Iteration {i}') for i in indices_to_plot])\
+    fig_vee = go.Figure([go.Scatter(x=r, y=iteration_data[i].Vee, mode='lines', name=f'Iter {i}') for i in indices_to_plot])\
                 .update_xaxes(title_text=r'$r$', range=[0, 10])\
                 .update_yaxes(title_text=r'$V_{ee}(r)$', type='log')
     plotly_export(fig_vee, path.join(folder_name, 'electron_electron_potential'))
@@ -343,10 +343,10 @@ def He_task(folder_name: str = 'helium_atom'):
     
 
 if __name__ == '__main__':
-    harmonic_oscillator_task()
-    hydrogen_atom_task()
-    first_order_task()
-    second_order_task()
-    second_order_l1_task()
-    r_dependence_task()
+    # harmonic_oscillator_task()
+    # hydrogen_atom_task()
+    # first_order_task()
+    # second_order_task()
+    # second_order_l1_task()
+    # r_dependence_task()
     He_task()
