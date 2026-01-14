@@ -283,16 +283,13 @@ def r_dependence_task(folder_name: str = 'r_dependence'):
                 .update_layout(legend=dict(title='Energy Level n'))
     plotly_export(residual_error_fig, path.join(folder_name, 'residual_error'))
 
-def He_task(folder_name: str = 'helium_atom'):
+def multi_electron_tasks(Z, R_max, K, folder_name):
     """
     Executes the routine for the Helium atom and generates analysis plots 
     based on specific parameters.
     """
     makedirs(path.join('results', folder_name), exist_ok=True)
 
-    K = 500
-    R_max = 20
-    Z = 2
     r = np.linspace(0, R_max, K + 1)[1:]
 
     iteration_data = solve_multi_electron_atom(Z, R_max, K)
@@ -339,6 +336,10 @@ def He_task(folder_name: str = 'helium_atom'):
     with open(path.join('results', folder_name, 'total_energy.tex'), 'w') as f:
         f.write(f'{total_energy:.6g}')
         
+def He_task(folder_name: str = 'helium_atom'):
+    multi_electron_tasks(Z=2, R_max=20, K=500, folder_name=folder_name)
+
+    
     
 
 if __name__ == '__main__':
