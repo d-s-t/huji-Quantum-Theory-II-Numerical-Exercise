@@ -4,7 +4,7 @@ import numpy as np
 from plotly import graph_objects as go
 from scipy.optimize import curve_fit
 from os import path, makedirs
-from multi_electron_solver import solve_multi_electron_atom
+from atom_solver import solve_atom
 from tqdm import tqdm
 
 def error_func(N, C, q):
@@ -287,7 +287,7 @@ def r_dependence_task(folder_name: str = 'r_dependence'):
                 .update_layout(legend=dict(title='Energy Level n'))
     plotly_export(residual_error_fig, path.join(folder_name, 'residual_error'))
 
-def multi_electron_tasks(Z, R_max, K, folder_name):
+def atom_tasks(Z, R_max, K, folder_name):
     """
     Executes the routine for the Helium atom and generates analysis plots 
     based on specific parameters.
@@ -296,7 +296,7 @@ def multi_electron_tasks(Z, R_max, K, folder_name):
 
     r = np.linspace(0, R_max, K + 1)[1:]
 
-    iteration_data = solve_multi_electron_atom(Z, R_max, K)
+    iteration_data = solve_atom(Z, R_max, K)
 
     # write the number of iterations to a latex file
     with open(path.join('results', folder_name, 'num_iterations.tex'), 'w') as f:
@@ -341,10 +341,10 @@ def multi_electron_tasks(Z, R_max, K, folder_name):
         f.write(f'{total_energy:.6g}')
         
 def helium_task(folder_name: str = 'helium_atom'):
-    multi_electron_tasks(Z=2, R_max=20, K=500, folder_name=folder_name)
+    atom_tasks(Z=2, R_max=20, K=500, folder_name=folder_name)
 
 def oxigen_task(folder_name: str = 'oxygen_atom'):
-    multi_electron_tasks(Z=8, R_max=10, K=400, folder_name=folder_name)
+    atom_tasks(Z=8, R_max=10, K=400, folder_name=folder_name)
     
 
 if __name__ == '__main__':

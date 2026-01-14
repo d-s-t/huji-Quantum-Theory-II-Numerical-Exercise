@@ -65,7 +65,7 @@ def get_electron_electron_potential(prev_Vee: np.ndarray, electron_density: np.n
 
     return 0.5 * (prev_Vee + Vee_new)
 
-def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 100, tol: float = 1e-6) -> list[IterationData]:
+def solve_atom(Z: int, R: float, K: int, max_iterations: int = 100, tol: float = 1e-6) -> list[IterationData]:
     """
     Solve the multi-electron atom problem using self-consistent field method.
 
@@ -89,7 +89,7 @@ def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 10
 
     with trange(100) as pbar:
         initial_dV = None
-        pbar.set_description(f'multi-electron atom Z={Z}')
+        pbar.set_description(f'atom Z={Z}')
         pbar.set_postfix({'iter': f'0/{max_iterations}', 'ΔVee': None, 'tol': f"{tol:.2e}"})
         for i in range(max_iterations):
             states = get_lower_energy_states(Z, R, K, Vee)
