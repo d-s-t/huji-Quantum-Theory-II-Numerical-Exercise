@@ -336,10 +336,11 @@ def multi_electron_tasks(Z, R_max, K, folder_name):
     with open(path.join('results', folder_name, 'total_energy.tex'), 'w') as f:
         f.write(f'{total_energy:.6g}')
         
-def He_task(folder_name: str = 'helium_atom'):
+def helium_task(folder_name: str = 'helium_atom'):
     multi_electron_tasks(Z=2, R_max=20, K=500, folder_name=folder_name)
 
-    
+def oxigen_task(folder_name: str = 'oxygen_atom'):
+    multi_electron_tasks(Z=8, R_max=10, K=400, folder_name=folder_name)
     
 
 if __name__ == '__main__':
@@ -349,4 +350,5 @@ if __name__ == '__main__':
     second_order_task()
     second_order_l1_task()
     r_dependence_task()
-    He_task()
+    helium_task()
+    oxigen_task()
