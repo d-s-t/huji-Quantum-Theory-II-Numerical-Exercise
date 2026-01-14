@@ -176,7 +176,7 @@ def first_order_task(folder_name: str = 'first_order'):
     ])\
                 .update_xaxes(title_text='N', type='log')\
                 .update_yaxes(title_text='Residual Error (a.u.)', type='log', showexponent='all', exponentformat='power')\
-                .update_layout(legend=dict(title='Method and l'))
+                .update_layout(legend=dict(title='method'))
     
     plotly_export(residual_error_fig, path.join(folder_name, 'residual_error'))
 
@@ -213,7 +213,7 @@ def second_order_task(folder_name: str = 'second_order'):
     ])\
                 .update_xaxes(title_text='N', type='log')\
                 .update_yaxes(title_text='Residual Error (a.u.)', type='log', showexponent='all', exponentformat='power')\
-                .update_layout(legend=dict(title='Method and l'))
+                .update_layout(legend=dict(title='method'))
     plotly_export(residual_error_fig, path.join(folder_name, 'residual_error'))
     (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm_l0)
     (_, q_nm_o1), _ = curve_fit(error_func, N_values, residual_error_nm_l0_first_order)
@@ -248,7 +248,7 @@ def second_order_l1_task(folder_name: str = 'second_order_l1'):
     ])\
                 .update_xaxes(title_text='N', type='log')\
                 .update_yaxes(title_text='Residual Error (a.u.)', type='log', showexponent='all', exponentformat='power')\
-                .update_layout(legend=dict(title='Method and l'))
+                .update_layout(legend=dict(title='method'))
     plotly_export(residual_error_fig, path.join(folder_name, 'residual_error'))
     (_, q_nm), _ = curve_fit(error_func, N_values, residual_error_nm_l1)
     (_, q_nm_o2), _ = curve_fit(error_func, N_values, residual_error_nm_l1_second_order)
