@@ -343,10 +343,10 @@ def He_task(folder_name: str = 'helium_atom'):
     
 
 if __name__ == '__main__':
-    # harmonic_oscillator_task()
-    # hydrogen_atom_task()
-    # first_order_task()
-    # second_order_task()
-    # second_order_l1_task()
-    # r_dependence_task()
+    harmonic_oscillator_task()
+    hydrogen_atom_task()
+    first_order_task()
+    second_order_task()
+    second_order_l1_task()
+    r_dependence_task()
     He_task()
