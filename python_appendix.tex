@@ -1,28 +1,14 @@
 \section{קוד מקור}
+
 \begin{english}
-    \subsection*{main.py}
-    % \lstinputlisting[language=Python]{main.py}
-    \inputminted[
-      linenos,
-      breaklines,
-      fontsize=\small
-    ]{python}{main.py}
-    \subsection*{eigen\_state\_solvers.py}
-    \inputminted[
-      linenos,
-      breaklines,
-      fontsize=\small
-    ]{python}{eigen_state_solvers.py}
-    \subsection*{potential\_functions.py}
-    \inputminted[
-      linenos,
-      breaklines,
-      fontsize=\small
-    ]{python}{potential_functions.py}
-    \subsection*{utils.py}
-    \inputminted[
-      linenos,
-      breaklines,
-      fontsize=\small
-    ]{python}{utils.py}
+    \foreach \filename in \pythonfiles {
+        
+        \subsection*{\texttt{\detokenize{\filename}}}
+        
+        \inputminted[
+             linenos,
+             breaklines,
+             fontsize=\small
+        ]{python}{\filename}
+    }
 \end{english}
