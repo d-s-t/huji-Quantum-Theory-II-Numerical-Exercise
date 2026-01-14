@@ -1,61 +1,12 @@
-from eigen_state_solvers import numerov_method_coulomb_l0_2nd_order as l0_solver, numerov_method_coulomb_l1_2nd_order as l1_solver
+from eigen_state_solvers import (
+    numerov_method_coulomb_l0_2nd_order as l0_solver,
+    numerov_method_coulomb_l1_2nd_order as l1_solver
+)
 import numpy as np
-from typing import Callable
 from potential_functions import coulomb_potential
-from dataclasses import dataclass
 from tqdm import trange
+from data_classes import NLMS_States, IterationData
 
-def get_states(Z: int) -> np.ndarray:
-    """
-    Get the |nlms> states needed for Z electrons in the atom.
-
-    :param Z: Atomic number
-    :type Z: int
-    :return: Array of shape (Z,4) with each row being (n,l,m,s)
-    :rtype: ndarray
-    """
-    return np.array([(n, l, m, s)
-                     for n in range(1, Z + 1)
-                     for l in range(n)
-                     for m in range(-l, l + 1)
-                     for s in [-1, 1]
-                     ], dtype=int)[:Z]
-
-@dataclass
-class NLMS_State:
-    n: int
-    l: int
-    m: int
-    s: int
-
-    # define unpack method
-    def __iter__(self):
-        return iter((self.n, self.l, self.m, self.s))
-    
-    def __str__(self):
-        return r"$|{n=}, {l=}, {m=}, \sigma={s}\rangle$".format(n=self.n, l=self.l, m=self.m, s=self.s)
-
-@dataclass
-class NLMS_States:
-    evals: list[np.ndarray]
-    evecs: list[np.ndarray]
-    Z: int
-
-    def __getitem__(self, state: tuple[int, int, int, int]) -> np.ndarray:
-        n, l, _, _ = state
-        idx = n - l - 1
-        return self.evecs[l][:, idx]
-    
-    def energy(self, state: tuple[int, int, int, int]) -> float:
-        n, l, _, _ = state
-        idx = n - l - 1
-        return self.evals[l][idx]
-    
-    def __iter__(self):
-        return iter(get_states(self.Z))
-    
-    def __len__(self):
-        return self.Z
 
 
 def get_lower_energy_states(Z: int, R: float, K: int, Vee: np.ndarray) -> NLMS_States:
@@ -125,12 +76,6 @@ def get_electron_electron_potential(prev_Vee: np.ndarray, rho: np.ndarray, r: np
     Vee_new = (Z-1)/Z * np.trapezoid(integrand, r, axis=1) # 4π factor is absorbed in rho.
 
     return 0.5 * (prev_Vee + Vee_new)
-
-@dataclass
-class IterationData:
-    Vee: np.ndarray
-    states: NLMS_States
-    rho: np.ndarray
 
 def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 100, tol: float = 1e-6) -> list[IterationData]:
     """
