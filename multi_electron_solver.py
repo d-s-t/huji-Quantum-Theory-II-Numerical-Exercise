@@ -88,8 +88,9 @@ def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 10
 
 
     with trange(100) as pbar:
-        initial_dV = None   
-        pbar.set_postfix({'ΔVee': None, 'tol': f"{tol:.2e}"})
+        initial_dV = None
+        pbar.set_description(f'multi-electron atom Z={Z}')
+        pbar.set_postfix({'iter': f'0/{max_iterations}', 'ΔVee': None, 'tol': f"{tol:.2e}"})
         for i in range(max_iterations):
             states = get_lower_energy_states(Z, R, K, Vee)
             electron_density = get_electron_density(states)
@@ -101,10 +102,12 @@ def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 10
             convergence_percent = 100 * (np.log(dV / initial_dV) / np.log(tol / initial_dV)) if initial_dV != 0 else 0
             iteration_percent = 100 * i // max_iterations
             pbar.n = min(int(max(convergence_percent, iteration_percent)), 100)
-            pbar.set_postfix({'ΔVee': f"{dV:.2e}", 'tol': f"{tol:.2e}"})
+            pbar.set_postfix({'iter': f'{i+1}/{max_iterations}', 'ΔVee': f"{dV:.2e}", 'tol': f"{tol:.2e}"})
             pbar.refresh()
             if dV < tol:
-                break
+                return iteration_data
             Vee = Vee_new
 
+    # print warning if not converged, use yelow color
+    print("\033[93mWarning: Maximum iterations reached without convergence.\033[0m")
     return iteration_data

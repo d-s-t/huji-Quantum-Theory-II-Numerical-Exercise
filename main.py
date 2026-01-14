@@ -5,6 +5,7 @@ from plotly import graph_objects as go
 from scipy.optimize import curve_fit
 from os import path, makedirs
 from multi_electron_solver import solve_multi_electron_atom
+from tqdm import tqdm
 
 def error_func(N, C, q):
     return C * N**(-q)
@@ -22,7 +23,7 @@ def harmonic_oscillator_task(folder_name: str = 'harmonic_oscillator'):
     from potential_functions import harmonic_oscillator_potential as V
     ground_state_energies_fd = np.empty_like(N_values, dtype=float)
     ground_state_energies_nm = np.empty_like(N_values, dtype=float)
-    for i, N in enumerate(N_values):
+    for i, N in enumerate(tqdm(N_values, desc="Harmonic Oscillator")):
         r = np.linspace(0, R, N + 1)[1:]
         evals_fd, evecs_fd = finite_difference_method_radial(l, V, r)
         evals_nm, evecs_nm = numerov_method_radial(l, V, r)
@@ -84,6 +85,7 @@ def hydrogen_atom_task(folder_name: str = 'hydrogen_atom'):
     from potential_functions import hydrogen_atom_potential as V
     ground_state_energies_fd = np.empty((len(l_values), len(N_values)), dtype=float)
     ground_state_energies_nm = np.empty((len(l_values), len(N_values)), dtype=float)
+    pbar = tqdm(total=len(l_values)*len(N_values), desc="Hydrogen Atom")
     for i, l in enumerate(l_values):
         for j, N in enumerate(N_values):
             r = np.linspace(0, R, N + 1)[1:]
@@ -91,6 +93,8 @@ def hydrogen_atom_task(folder_name: str = 'hydrogen_atom'):
             evals_nm = numerov_method_radial(l, V, r, eigvals_only=True)
             ground_state_energies_fd[i, j] = evals_fd[0]
             ground_state_energies_nm[i, j] = evals_nm[0]
+            pbar.update(1)
+    pbar.close()
     
     with open(path.join('results', folder_name, 'ground_state_energies.tex'), 'w') as f:
         f.write(r'\begin{tabular}{|c|' + 'c|'*len(N_values) + '}' + '\n')
@@ -149,7 +153,7 @@ def first_order_task(folder_name: str = 'first_order'):
     ground_state_energies_nm_l0_first_order = np.empty_like(N_values, dtype=float)
     ground_state_energies_nm_l0_regular = np.empty_like(N_values, dtype=float)
     
-    for i, N in enumerate(N_values):
+    for i, N in enumerate(tqdm(N_values, desc="First Order Task")):
         r = np.linspace(0, R, N + 1)[1:]
         evals_nm = numerov_method_coulomb_l0_1st_order(Z, R, N, eigvals_only=True)
         ground_state_energies_nm_l0_first_order[i] = evals_nm[0]
@@ -273,7 +277,7 @@ def r_dependence_task(folder_name: str = 'r_dependence'):
     n = np.arange(1, n_levels + 1)
     exact_energies = -0.5 * Z**2 / n**2
     residual_errors = np.empty((n_levels, len(R_values)), dtype=float)
-    for i, R in enumerate(R_values):
+    for i, R in enumerate(tqdm(R_values, desc="R Dependence Task")):
         evals = numerov_method_coulomb_l0_2nd_order(Z, R, N, eigvals_only=True)
         residual_errors[:, i] = np.abs(evals[:n_levels] - exact_energies)
     
