@@ -304,34 +304,31 @@ def He_task(folder_name: str = 'helium_atom'):
     # 2. Electron Density Plot:
     num_iterations_to_plot = min(10, len(iteration_data))
     indices_to_plot = np.linspace(0, len(iteration_data) - 1, num_iterations_to_plot, dtype=int)
-    fig_rho = go.Figure([go.Scatter(x=r, y=iteration_data[i].rho, mode='lines', name=f'Iteration {i}') for i in indices_to_plot])\
-                .update_xaxes(title_text=r'$r \text{ [a.u.]}$', range=[0, 10])\
-                .update_yaxes(title_text=r'$\rho(r) \text{ [a.u.]}$', type='log')
-                # .update_layout(title='Electron Density for Helium Atom')
-    plotly_export(fig_rho, path.join(folder_name, 'electron_density'))
+    fig_density = go.Figure([go.Scatter(x=r, y=iteration_data[i].electron_density, mode='lines', name=f'Iteration {i}') for i in indices_to_plot])\
+                .update_xaxes(title_text=r'$r$', range=[0, 10])\
+                .update_yaxes(title_text=r'$\lambda_e(r)$', type='log')
+    plotly_export(fig_density, path.join(folder_name, 'electron_density'))
 
     # 3. Electronic Potential Plot:
     indices_to_plot = np.linspace(1, len(iteration_data) - 1, num_iterations_to_plot, dtype=int)
     fig_vee = go.Figure([go.Scatter(x=r, y=iteration_data[i].Vee, mode='lines', name=f'Iteration {i}') for i in indices_to_plot])\
-                .update_xaxes(title_text=r'$r \text{ [a.u.]}$', range=[0, 10])\
-                .update_yaxes(title_text=r'$V_{ee}(r) \text{ [a.u.]}$', type='log')
-                # .update_layout(title='Electron-Electron Potential for Helium Atom')
+                .update_xaxes(title_text=r'$r$', range=[0, 10])\
+                .update_yaxes(title_text=r'$V_{ee}(r)$', type='log')
     plotly_export(fig_vee, path.join(folder_name, 'electron_electron_potential'))
 
     # 4. Effective Charge Plot:
     converged_data = iteration_data[-1]
     Z_eff = -Z + r * converged_data.Vee
     fig_zeff = go.Figure([go.Scatter(x=r, y=Z_eff, mode='lines', name='Converged Z_eff')])\
-                 .update_xaxes(title_text=r'$r \text{ [a.u.]}$', range=[0, 10])\
-                 .update_yaxes(title_text=r'$Z_{\text{eff}}(r) \text{ [a.u.]}$')
-                #  .update_layout(title='Effective Charge for Helium Atom')
+                 .update_xaxes(title_text=r'$r$', range=[0, 10])\
+                 .update_yaxes(title_text=r'$Z_{\text{eff}}(r)$')
     plotly_export(fig_zeff, path.join(folder_name, 'effective_charge'))
 
     # 5. Energy Output:
     final_states = converged_data.states
     with open(path.join('results', folder_name, 'converged_energies.tex'), 'w') as f:
         f.write(r'\begin{tabular}{c c}' + '\n')
-        f.write(r'State & Energy (a.u.) \\' + '\n')
+        f.write(r'מצב & אנרגיה \\' + '\n')
         f.write(r'\hline' + '\n')
         for state in final_states:
             energy = final_states.energy(state)

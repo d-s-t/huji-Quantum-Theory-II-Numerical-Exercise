@@ -37,43 +37,31 @@ def get_lower_energy_states(Z: int, R: float, K: int, Vee: np.ndarray) -> NLMS_S
     all_evecs = [evecs0, evecs1]
     return NLMS_States(all_evals, all_evecs, Z=Z)
 
-def get_electron_density(states: NLMS_States, r: np.ndarray) -> np.ndarray:
+def get_electron_density(states: NLMS_States) -> np.ndarray:
     """
-    Compute the electron density ρ(r) from the given eigenstates.
+    Compute the electron radial density \\lambda_e(r) from the given eigenstates.
 
     :param states: Eigenstates of shape (Z, K)
     :type states: NLMS_States
-    :param r: Radial grid points of shape (K,)
-    :type r: ndarray
-    :param Z: Atomic number
-    :type Z: int
-    :return: Electron density ρ(r) of shape (K,)
+    :return: Electron radial density \\lambda_e(r) of shape (K,)
     :rtype: ndarray
     """
-    rho = np.zeros_like(r, dtype=np.float64)
-    for state in states:
-        evec = states[state]/r
-        rho += np.abs(evec)**2
-    return rho
+    return sum(np.abs(states[state])**2 for state in states)
 
-
-
-def get_electron_electron_potential(prev_Vee: np.ndarray, rho: np.ndarray, r: np.ndarray, Z: int) -> np.ndarray:
+def get_electron_electron_potential(prev_Vee: np.ndarray, electron_density: np.ndarray, r: np.ndarray, Z: int) -> np.ndarray:
     """
     Compute the electron-electron interaction potential Vee(r) from the given eigenstates.
-    V_{ee}(r) = 4\\pi\\frac{Z-1}{Z}\\int_0^\\infty dr' \\frac{r'^2 \\rho(r')}{\\max(r,r')}
+    V_{ee}(r) = 4\\pi\\frac{Z-1}{Z}\\int_0^\\infty dr' \\frac{\\lambda_e(r')}{\\max(r,r')}
 
-    :param rho: Electron density of shape (K,)
-    :type rho: ndarray
+    :param electron_density: Electron radial density \\lambda_e(r) of shape (K,)
+    :type electron_density: ndarray
     :param r: Radial grid points of shape (K,)
     :type r: ndarray
     :return: Electron-electron interaction potential Vee(r) of shape (K,)
     :rtype: ndarray
     """
-    numerator = rho * r**2
-    denominator = np.maximum(r[:, None], r[None, :])
-    integrand = numerator / denominator
-    Vee_new = (Z-1)/Z * np.trapezoid(integrand, r, axis=1) # 4π factor is absorbed in rho.
+    integrand = electron_density / np.maximum(r[:, None], r[None, :])
+    Vee_new = (Z-1)/Z * np.trapezoid(integrand, r, axis=1)
 
     return 0.5 * (prev_Vee + Vee_new)
 
@@ -104,9 +92,9 @@ def solve_multi_electron_atom(Z: int, R: float, K: int, max_iterations: int = 10
         pbar.set_postfix({'ΔVee': None, 'tol': f"{tol:.2e}"})
         for i in range(max_iterations):
             states = get_lower_energy_states(Z, R, K, Vee)
-            rho = get_electron_density(states, r)
-            iteration_data.append(IterationData(Vee=Vee.copy(), states=states, rho=rho.copy()))
-            Vee_new = get_electron_electron_potential(Vee, rho, r, Z)
+            electron_density = get_electron_density(states)
+            iteration_data.append(IterationData(Vee=Vee.copy(), states=states, electron_density=electron_density.copy()))
+            Vee_new = get_electron_electron_potential(Vee, electron_density, r, Z)
             dV = np.linalg.norm(Vee_new - Vee)
             if initial_dV is None:
                 initial_dV = dV

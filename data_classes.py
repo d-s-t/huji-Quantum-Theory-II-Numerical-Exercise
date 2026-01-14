@@ -48,4 +48,4 @@ class NLMS_States:
 class IterationData:
     Vee: np.ndarray
     states: NLMS_States
-    rho: np.ndarray
+    electron_density: np.ndarray
