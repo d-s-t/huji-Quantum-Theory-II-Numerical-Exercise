@@ -295,7 +295,7 @@ def He_task(folder_name: str = 'helium_atom'):
     Z = 2
     r = np.linspace(0, R_max, K + 1)[1:]
 
-    iteration_data = solve_multi_electron_atom(Z, R_max, K, tol=1e-3)
+    iteration_data = solve_multi_electron_atom(Z, R_max, K)
 
     # write the number of iterations to a latex file
     with open(path.join('results', folder_name, 'num_iterations.tex'), 'w') as f:
@@ -305,16 +305,16 @@ def He_task(folder_name: str = 'helium_atom'):
     num_iterations_to_plot = min(10, len(iteration_data))
     indices_to_plot = np.linspace(0, len(iteration_data) - 1, num_iterations_to_plot, dtype=int)
     fig_rho = go.Figure([go.Scatter(x=r, y=iteration_data[i].rho, mode='lines', name=f'Iteration {i}') for i in indices_to_plot])\
-                .update_xaxes(title_text=r'$r \text{(a.u.)}$', range=[0, 10])\
-                .update_yaxes(title_text=r'$\rho(r) \text{(a.u.)}$', type='log')
+                .update_xaxes(title_text=r'$r \text{ [a.u.]}$', range=[0, 10])\
+                .update_yaxes(title_text=r'$\rho(r) \text{ [a.u.]}$', type='log')
                 # .update_layout(title='Electron Density for Helium Atom')
     plotly_export(fig_rho, path.join(folder_name, 'electron_density'))
 
     # 3. Electronic Potential Plot:
     indices_to_plot = np.linspace(1, len(iteration_data) - 1, num_iterations_to_plot, dtype=int)
     fig_vee = go.Figure([go.Scatter(x=r, y=iteration_data[i].Vee, mode='lines', name=f'Iteration {i}') for i in indices_to_plot])\
-                .update_xaxes(title_text=r'$r \text{(a.u.)}$', range=[0, 10])\
-                .update_yaxes(title_text=r'$V_{ee}(r) \text{(a.u.)}$', type='log')
+                .update_xaxes(title_text=r'$r \text{ [a.u.]}$', range=[0, 10])\
+                .update_yaxes(title_text=r'$V_{ee}(r) \text{ [a.u.]}$', type='log')
                 # .update_layout(title='Electron-Electron Potential for Helium Atom')
     plotly_export(fig_vee, path.join(folder_name, 'electron_electron_potential'))
 
@@ -322,8 +322,8 @@ def He_task(folder_name: str = 'helium_atom'):
     converged_data = iteration_data[-1]
     Z_eff = -Z + r * converged_data.Vee
     fig_zeff = go.Figure([go.Scatter(x=r, y=Z_eff, mode='lines', name='Converged Z_eff')])\
-                 .update_xaxes(title_text=r'$r \text{(a.u.)}$', range=[0, 10])\
-                 .update_yaxes(title_text=r'$Z_{\text{eff}}(r) \text{(a.u.)}$')
+                 .update_xaxes(title_text=r'$r \text{ [a.u.]}$', range=[0, 10])\
+                 .update_yaxes(title_text=r'$Z_{\text{eff}}(r) \text{ [a.u.]}$')
                 #  .update_layout(title='Effective Charge for Helium Atom')
     plotly_export(fig_zeff, path.join(folder_name, 'effective_charge'))
 

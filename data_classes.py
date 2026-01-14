@@ -15,7 +15,7 @@ class NLMS_State:
         return iter((self.n, self.l, self.m, self.s))
     
     def __str__(self):
-        return r"$|n={n}, l={l}, m={m}, \sigma={s}\rangle$".format(n=self.n, l=self.l, m=self.m, s=self.s)
+        return r"|n={n}, l={l}, m={m}, \sigma={s}\rangle".format(n=self.n, l=self.l, m=self.m, s=self.s)
 
 @dataclass
 class NLMS_States:
