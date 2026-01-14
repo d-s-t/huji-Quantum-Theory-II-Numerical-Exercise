@@ -3,12 +3,8 @@
 \begin{english}
     \foreach \filename in \filelist {
         
-        \subsection*{\texttt{\detokenize{\filename}}}
+        \subsection*{\texttt{\expandafter\detokenize\expandafter{\filename}}}
         
-        \inputminted[
-             linenos,
-             breaklines,
-             fontsize=\small
-        ]{python}{\filename}
+        \expandafter\printpythoncode\expandafter{\filename}
     }
 \end{english}

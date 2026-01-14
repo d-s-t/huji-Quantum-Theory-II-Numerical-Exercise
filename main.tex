@@ -47,6 +47,13 @@
 \Crefname{table}{טבלה}{טבלאות}
 
 \include{file_list}
+\newcommand{\printpythoncode}[1]{%
+    \inputminted[
+         linenos,
+         breaklines,
+         fontsize=\small
+    ]{python}{#1}%
+}
 
 \setlength{\parindent}{0pt}
 
